@@ -1,0 +1,105 @@
+/* ==========================================================================
+   SkillBridge — Base styles
+   Variables, reset, typography, and generic layout helpers.
+   ========================================================================== */
+
+:root {
+  /* Colors */
+  --color-bg: #F4F5FA;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #EDEFF7;
+  --color-ink: #171B2E;
+  --color-ink-soft: #565B72;
+  --color-ink-faint: #8A8FA3;
+  --color-border: #E1E3EF;
+
+  --color-primary: #37409C;
+  --color-primary-dark: #262C6E;
+  --color-primary-soft: #E8E9F7;
+
+  --color-accent: #E3A73B;
+  --color-accent-soft: #FBF0DA;
+
+  --color-success: #2F9E6B;
+  --color-success-soft: #E3F5EC;
+
+  --color-warning: #D9822B;
+  --color-warning-soft: #FBEADB;
+
+  --color-critical: #C1483D;
+  --color-critical-soft: #F8E3E1;
+
+  /* Type */
+  --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --font-body: 'Inter', 'Segoe UI', sans-serif;
+
+  /* Shape & shadow */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --shadow-card: 0 1px 2px rgba(23,27,46,0.05), 0 10px 26px -14px rgba(23,27,46,0.16);
+
+  --container-width: 1160px;
+}
+
+* , *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-bg);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.15;
+  margin: 0 0 0.5em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: clamp(2rem, 1.5rem + 2vw, 3.25rem); }
+h2 { font-size: clamp(1.5rem, 1.3rem + 1vw, 2.25rem); }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.05rem; }
+
+p { margin: 0 0 1em; color: var(--color-ink-soft); max-width: 62ch; }
+
+a { color: var(--color-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+img, svg { max-width: 100%; display: block; }
+
+ul, ol { padding-left: 1.2em; }
+
+button, input, select, textarea { font-family: inherit; font-size: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

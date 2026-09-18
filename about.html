@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — SkillBridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+  .page-hero { padding: 56px 0 40px; max-width: 720px; }
+  section.section { padding: 56px 0; }
+  .sdg-grid { display:grid; grid-template-columns: 1fr 1fr; gap:20px; }
+  @media (max-width:700px){ .sdg-grid{ grid-template-columns:1fr; } }
+  footer.site-footer { border-top: 1px solid var(--color-border); padding: 40px 0 28px; }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#E3A73B" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#171B2E" stroke-width="2.5" stroke-linecap="round"/></svg>
+      SkillBridge
+    </a>
+    <ul class="topnav-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="how-it-works.html">How It Works</a></li>
+      <li><a href="index.html#faq">FAQ</a></li>
+    </ul>
+    <div class="topnav-actions">
+      <a href="login.html" class="btn btn-ghost btn-sm">Masuk</a>
+      <a href="register.html" class="btn btn-primary btn-sm">Daftar</a>
+    </div>
+    <button class="nav-toggle" aria-label="Buka menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#171B2E" stroke-width="2" stroke-linecap="round"/></svg></button>
+  </div>
+</nav>
+
+<header class="container page-hero">
+  <p class="card-eyebrow">Tentang Kami</p>
+  <h1>Bridging the Gap Between Education and the Future of Work</h1>
+  <p>SkillBridge lahir dari satu masalah sederhana: mahasiswa belajar banyak hal, tapi jarang tahu apakah yang mereka pelajari sudah cukup untuk karier yang mereka incar.</p>
+</header>
+
+<section class="section alt" style="background: var(--color-surface); border-top:1px solid var(--color-border); border-bottom:1px solid var(--color-border);">
+  <div class="container" style="max-width:720px;">
+    <h2>Kenapa Bukan Job Portal?</h2>
+    <p>Job portal membantu kamu menemukan lowongan. SkillBridge membantu kamu tahu apakah kamu sudah siap untuk lowongan itu — dan kalau belum, apa yang harus dipelajari. Kami sengaja tidak membangun fitur pencarian kerja, supaya fokus produk tetap pada kesiapan dan pengembangan skill.</p>
+    <h2>Bagaimana Cara Kerjanya</h2>
+    <p>SkillBridge membandingkan skill yang kamu miliki dengan skill yang dibutuhkan karier incaranmu, lalu menyusun learning roadmap personal berdasarkan gap yang ditemukan. Semua berbasis data — bukan tebakan.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 style="margin-bottom:20px;">Selaras dengan Tujuan Global</h2>
+    <div class="sdg-grid">
+      <div class="card">
+        <p class="card-eyebrow">SDG 4</p>
+        <h3>Quality Education</h3>
+        <p class="text-sm">Membantu mahasiswa mengembangkan keterampilan yang relevan dengan kebutuhan nyata, bukan sekadar nilai akademik.</p>
+      </div>
+      <div class="card">
+        <p class="card-eyebrow">SDG 8</p>
+        <h3>Decent Work and Economic Growth</h3>
+        <p class="text-sm">Meningkatkan kesiapan mahasiswa menuju dunia kerja, mengurangi kesenjangan antara pendidikan dan kebutuhan industri.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt" style="background: var(--color-surface); border-top:1px solid var(--color-border);">
+  <div class="container" style="max-width:640px; text-align:center;">
+    <h2>Catatan Prototype</h2>
+    <p>SkillBridge saat ini adalah prototype untuk keperluan kompetisi. Data industri dan statistik dampak yang ditampilkan adalah data contoh (demo data), bukan data aktual dari perusahaan manapun.</p>
+    <a href="register.html" class="btn btn-primary">Coba SkillBridge</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container text-sm text-faint">© 2026 SkillBridge. Proyek prototype untuk kompetisi.</div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

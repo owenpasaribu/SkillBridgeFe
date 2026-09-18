@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar — SkillBridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+  .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+  .auth-card { width: 100%; max-width: 480px; }
+  .auth-head { text-align: center; margin-bottom: 28px; }
+  .auth-foot { text-align: center; margin-top: 20px; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-head">
+      <a href="index.html" class="brand" style="justify-content:center;">
+        <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#E3A73B" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#171B2E" stroke-width="2.5" stroke-linecap="round"/></svg>
+        SkillBridge
+      </a>
+      <h2 style="margin-top:16px;">Buat akun barumu</h2>
+      <p class="text-sm">Butuh kurang dari 2 menit.</p>
+    </div>
+
+    <div class="card">
+      <form id="registerForm">
+        <div class="field">
+          <label for="fullName">Nama Lengkap</label>
+          <input type="text" id="fullName" required placeholder="Nama kamu">
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" required placeholder="nama@kampus.ac.id">
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" required minlength="6" placeholder="Minimal 6 karakter">
+        </div>
+        <div class="field">
+          <label for="university">Universitas</label>
+          <input type="text" id="university" required placeholder="Nama universitas">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="major">Jurusan</label>
+            <input type="text" id="major" required placeholder="Contoh: Teknik Informatika">
+          </div>
+          <div class="field">
+            <label for="semester">Semester</label>
+            <input type="number" id="semester" min="1" max="14" required placeholder="6">
+          </div>
+        </div>
+        <div class="field">
+          <label for="graduationYear">Perkiraan Tahun Lulus</label>
+          <input type="number" id="graduationYear" min="2024" max="2035" required placeholder="2027">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Buat Akun &amp; Lanjut Onboarding</button>
+      </form>
+    </div>
+
+    <p class="auth-foot text-soft">Sudah punya akun? <a href="login.html">Masuk di sini</a></p>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/admin-store.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/scoring.js"></script>
+<script src="js/api-mock.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>

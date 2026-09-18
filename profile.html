@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile & Settings — SkillBridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+  .avatar-circle { width:56px; height:56px; border-radius:50%; background: var(--color-primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-family: var(--font-display); font-size:1.1rem; }
+  .save-toast { display:none; background: var(--color-success-soft); color: var(--color-success); padding:10px 16px; border-radius: var(--radius-sm); font-size:0.88rem; margin-bottom:16px; }
+  .save-toast.is-visible { display:block; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#E3A73B" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#171B2E" stroke-width="2.5" stroke-linecap="round"/></svg>
+      SkillBridge
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="dashboard.html"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg> Dashboard</a></li>
+      <li><a href="career-explorer.html"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M15 9l-2 6-6 2 2-6 6-2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> Career Explorer</a></li>
+      <li><a href="skill-assessment.html"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" stroke-width="1.8"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="1.8"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Skill Assessment</a></li>
+      <li><a href="skill-gap.html"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20V10M12 20V4M20 20v-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Skill Gap Analysis</a></li>
+      <li><a href="learning-roadmap.html"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19c4-6 6 4 10-2s2-8 6-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="4" cy="19" r="1.4" fill="currentColor"/><circle cx="20" cy="9" r="1.4" fill="currentColor"/></svg> Learning Roadmap</a></li>
+      <li><a href="industry-insights.html"><svg viewBox="0 0 24 24" fill="none"><path d="M4 16l5-5 4 4 7-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 7h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Industry Insights</a></li>
+      <li><a href="portfolio-readiness.html"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="8" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 8V6a2 2 0 012-2h4a2 2 0 012 2v2" stroke="currentColor" stroke-width="1.8"/></svg> Portfolio Readiness</a></li>
+      <li><a href="progress.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l3 8 4-16 3 8h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> My Growth</a></li>
+      <li><a href="profile.html"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c1.5-4 4-6 7-6s5.5 2 7 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Profile &amp; Settings</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="#" data-action="logout" class="btn btn-ghost btn-sm btn-block">Keluar</a>
+    </div>
+  </aside>
+  <div class="app-main">
+    <div class="app-topbar">
+      <button data-action="toggle-sidebar" class="nav-toggle" style="display:inline-flex;" aria-label="Buka menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#171B2E" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <span class="brand" style="font-size:1rem;">SkillBridge</span>
+      <span style="width:22px;"></span>
+    </div>
+    <div class="app-content" style="max-width:640px;">
+      <h2 style="margin-bottom:4px;">Profile &amp; Settings</h2>
+      <p class="text-soft">Kelola data dasar dan target kariermu.</p>
+
+      <div class="save-toast" id="saveToast">Perubahan tersimpan.</div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="flex-between" style="margin-bottom:20px;">
+          <div class="avatar-circle" id="avatarCircle"></div>
+          <button id="logoutBtn" class="btn btn-ghost btn-sm">Keluar</button>
+        </div>
+        <form id="profileForm">
+          <div class="field"><label for="p-fullName">Nama Lengkap</label><input type="text" id="p-fullName"></div>
+          <div class="field"><label for="p-email">Email</label><input type="email" id="p-email" disabled></div>
+          <div class="field"><label for="p-university">Universitas</label><input type="text" id="p-university"></div>
+          <div class="field-row">
+            <div class="field"><label for="p-major">Jurusan</label><input type="text" id="p-major"></div>
+            <div class="field"><label for="p-semester">Semester</label><input type="number" id="p-semester" min="1" max="14"></div>
+          </div>
+          <div class="field"><label for="p-gradYear">Perkiraan Tahun Lulus</label><input type="number" id="p-gradYear"></div>
+          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+        </form>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <h3>Target Karier</h3>
+        <p class="text-sm" id="currentCareerLine"></p>
+        <div class="field">
+          <label for="p-timeline">Target siap dalam berapa bulan?</label>
+          <input type="number" id="p-timeline" min="1" max="36">
+        </div>
+        <div class="flex-between">
+          <a href="career-explorer.html" class="btn-text text-sm">Ganti target karier</a>
+          <button id="saveTimelineBtn" class="btn btn-ghost btn-sm">Simpan Timeline</button>
+        </div>
+      </div>
+
+      <div class="card" style="border-color: var(--color-critical);">
+        <h3>Zona Berbahaya</h3>
+        <p class="text-sm">Menghapus data akan mengeluarkan kamu dan menghapus seluruh progres yang tersimpan di browser ini.</p>
+        <button id="resetBtn" class="btn btn-danger btn-sm">Hapus Semua Data Saya</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/admin-store.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/scoring.js"></script>
+<script src="js/api-mock.js"></script>
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script src="js/profile.js"></script>
+</body>
+</html>

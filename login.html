@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masuk — SkillBridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+  .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+  .auth-card { width: 100%; max-width: 420px; }
+  .auth-head { text-align: center; margin-bottom: 28px; }
+  .auth-foot { text-align: center; margin-top: 20px; font-size: 0.9rem; }
+  .divider { display: flex; align-items: center; gap: 12px; color: var(--color-ink-faint); font-size: 0.82rem; margin: 20px 0; }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--color-border); }
+  .form-error { background: var(--color-critical-soft); color: var(--color-critical); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 16px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-head">
+      <a href="index.html" class="brand" style="justify-content:center;">
+        <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#E3A73B" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#171B2E" stroke-width="2.5" stroke-linecap="round"/></svg>
+        SkillBridge
+      </a>
+      <h2 style="margin-top:16px;">Masuk ke akunmu</h2>
+      <p class="text-sm">Lanjutkan pantau career readiness kamu.</p>
+    </div>
+
+    <div class="card">
+      <div id="loginError" class="form-error"></div>
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" required placeholder="nama@kampus.ac.id">
+        </div>
+        <div class="field">
+          <div class="flex-between mb-0">
+            <label for="password" class="mb-0">Password</label>
+            <a href="forgot-password.html" class="text-sm">Lupa password?</a>
+          </div>
+          <input type="password" id="password" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+      </form>
+
+      <div class="divider">atau</div>
+      <button id="demoBtn" class="btn btn-ghost btn-block">Coba sebagai akun demo (Student)</button>
+      <button id="demoAdminBtn" class="btn btn-ghost btn-block" style="margin-top:8px;">Coba sebagai Admin</button>
+      <p class="field-hint" style="margin-top: 14px; text-align:center;">
+        Satu form login ini berlaku untuk student maupun admin — sistem otomatis mengarahkan sesuai akun. Demo admin: <strong>admin@skillbridge.id</strong> / <strong>admin123</strong>.<br>
+        Prototype ini menyimpan data di browser kamu (localStorage), jadi login hanya berfungsi di perangkat/browser yang sama saat kamu daftar.
+      </p>
+    </div>
+
+    <p class="auth-foot text-soft">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/admin-store.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/scoring.js"></script>
+<script src="js/api-mock.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>
