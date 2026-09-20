@@ -28,8 +28,9 @@
   .section-head { max-width: 640px; margin-bottom: 40px; }
   .section-head h2 { margin-bottom: 12px; }
 
-  .problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  @media (max-width: 860px) { .problem-grid { grid-template-columns: 1fr; } }
+  .problem-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  @media (max-width: 1100px) { .problem-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .problem-grid { grid-template-columns: 1fr; } }
   .problem-card .num { font-family: var(--font-display); font-size: 1.6rem; color: var(--color-primary); margin-bottom: 12px; }
 
   .steps-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
@@ -73,6 +74,16 @@
   .footer-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
   .footer-col a { color: var(--color-ink-soft); font-size: 0.9rem; }
   .footer-bottom { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--color-border); font-size: 0.82rem; color: var(--color-ink-faint); }
+
+  /* IT Roles per Region */
+  .region-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: start; }
+  @media (max-width: 860px) { .region-grid { grid-template-columns: 1fr; } }
+  .region-list { display: flex; flex-direction: column; gap: 10px; }
+  .region-row { display: grid; grid-template-columns: 1fr auto 120px; align-items: center; gap: 14px; padding: 12px 16px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md, 10px); }
+  .region-row .region-name { font-weight: 600; }
+  .region-row .region-count { font-size: 0.85rem; color: var(--color-ink-faint); white-space: nowrap; }
+  .region-bar-track { height: 8px; border-radius: 999px; background: var(--color-border); overflow: hidden; }
+  .region-bar-fill { height: 100%; border-radius: 999px; background: var(--color-primary); }
 </style>
 </head>
 <body>
@@ -93,6 +104,7 @@
       <li><a href="about.html">About</a></li>
       <li><a href="how-it-works.html">How It Works</a></li>
       <li><a href="#careers-preview">Career Insights</a></li>
+      <li><a href="#regional-insight">IT Jobs by Region</a></li>
       <li><a href="#faq">FAQ</a></li>
     </ul>
     <div class="topnav-actions">
@@ -153,7 +165,7 @@
   <div class="container">
     <div class="section-head">
       <h2>Learning a lot, but not necessarily in the right direction</h2>
-      <p>Most students do not lack the motivation to learn — they lack clarity on which skills their target jobs actually require.</p>
+      <p>Most students do not lack the motivation to learn — they lack clarity on which skills their target jobs actually require, and where those jobs actually are.</p>
     </div>
     <div class="problem-grid">
       <div class="problem-card">
@@ -170,6 +182,11 @@
         <div class="num">03</div>
         <h3>Progress is hard to measure</h3>
         <p>You have studied for months, but there is no objective way to tell how far you have come.</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">04</div>
+        <h3>No visibility into where jobs actually are</h3>
+        <p>You know which skills to build, but not which provinces in Indonesia actually have the most open IT roles — data that shapes where to focus your job search.</p>
       </div>
     </div>
   </div>
@@ -244,6 +261,24 @@
       <div class="card career-mini-card"><h4>UI/UX Designer</h4><p class="text-sm">UI Design, Figma, Communication</p></div>
     </div>
     <div style="margin-top: 24px;"><a href="register.html" class="btn-text">View all careers &amp; start analyzing your skills</a></div>
+  </div>
+</section>
+
+<section class="section alt" id="regional-insight">
+  <div class="container region-grid">
+    <div>
+      <p class="card-eyebrow">Job Market Insights</p>
+      <h2>IT Roles per Region in Indonesia</h2>
+      <p>Beyond skill gaps, SkillBridge also shows where the demand actually is. Each bar reflects the number of active IT job postings we collect per province, so you know not just what to learn, but where the opportunities are concentrated.</p>
+      <span class="badge badge-demo info-badge" tabindex="0" style="margin-top:16px;" data-tooltip="Figures shown here are illustrative for this preview. In the full platform, numbers are refreshed periodically from real job-posting data collected via scraping.">Sample view ⓘ</span>
+    </div>
+
+    <div class="card">
+      <p class="card-eyebrow">Active IT Job Postings</p>
+      <h3>Top Provinces</h3>
+      <div class="region-list" id="region-list" style="margin-top: 16px;"></div>
+      <p class="text-sm text-faint" style="margin-top:16px;">Based on aggregated job-posting data collected from job boards across Indonesia.</p>
+    </div>
   </div>
 </section>
 
@@ -378,6 +413,37 @@
       <p class="faq-a">${item.a}</p>`;
     el.querySelector('.faq-q').addEventListener('click', () => el.classList.toggle('is-open'));
     faqList.appendChild(el);
+  });
+
+  // IT Roles per Region (sample/demo data — replace with real scraped job-posting counts)
+  const REGION_DATA = [
+    { province: "DKI Jakarta", count: 1240 },
+    { province: "Jawa Barat", count: 860 },
+    { province: "Jawa Timur", count: 540 },
+    { province: "Banten", count: 410 },
+    { province: "Jawa Tengah", count: 305 },
+    { province: "Yogyakarta", count: 210 },
+    { province: "Sumatera Utara", count: 145 },
+    { province: "Bali", count: 120 }
+  ];
+
+  const regionList = document.getElementById('region-list');
+  const maxCount = Math.max(...REGION_DATA.map(r => r.count));
+  REGION_DATA.forEach(r => {
+    const pct = Math.round((r.count / maxCount) * 100);
+    const row = document.createElement('div');
+    row.className = 'region-row';
+    row.innerHTML = `
+      <div>
+        <div class="region-name">${r.province}</div>
+        <div class="region-bar-track" style="margin-top:6px;">
+          <div class="region-bar-fill" style="width:${pct}%"></div>
+        </div>
+      </div>
+      <div></div>
+      <div class="region-count">${r.count.toLocaleString('id-ID')} lowongan</div>
+    `;
+    regionList.appendChild(row);
   });
 </script>
 </body>
