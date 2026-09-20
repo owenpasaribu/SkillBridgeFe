@@ -7,12 +7,12 @@
 
 const LEVEL_MULTIPLIER = { entry: 1, mid: 0.93, senior: 0.85 };
 const TREND_ICON = { up: '▲', down: '▼', stable: '▬' };
-const TREND_COLOR = { up: '#2F9E6B', down: '#C1483D', stable: '#8A8FA3' };
+const TREND_COLOR = { up: '#2E7148', down: '#9C3529', stable: '#6F644D' };
 
 const GENERIC_CERTS = [
-  'Sertifikasi dasar sesuai bidang (mis. cloud practitioner, data analytics)',
-  'Pengalaman proyek portofolio yang bisa didemokan',
-  'Kontribusi pada proyek open source atau organisasi kampus',
+  'Foundational certifications for your field (e.g., cloud practitioner, data analytics)',
+  'Portfolio project experience you can demo',
+  'Contributions to open source projects or campus organizations',
 ];
 
 let allCareersCache = [];
@@ -73,22 +73,24 @@ async function render() {
 
   const totalSample = list.reduce((sum, i) => sum + i.job_sample_size, 0);
   document.getElementById('methodologyBadge').dataset.tooltip =
-    `Data disimulasikan untuk kebutuhan prototype dari kombinasi ~${totalSample} lowongan contoh, periode 3 bulan terakhir. Bukan hasil scraping data lowongan riil.`;
+    isLiveMode()
+      ? `Based on ~${totalSample} job postings analyzed by the SkillBridge data pipeline.`
+      : `Simulated data for this prototype, combined from ~${totalSample} sample job postings over the last 3 months. Not real scraped job-posting data.`;
 }
 
 function renderNarrative(list, career, region) {
   const top = list[0];
   if (!top) return;
-  const regionText = region === 'Nasional' ? 'secara nasional' : region === 'Remote' ? 'untuk posisi remote' : `di ${region}`;
-  const careerText = career ? career.name : 'berbagai posisi';
+  const regionText = region === 'National' ? 'nationwide' : region === 'Remote' ? 'for remote positions' : `in ${region}`;
+  const careerText = career ? career.name : 'various roles';
   document.getElementById('narrativeSummary').innerHTML =
-    `<strong>${top.skill_name}</strong> muncul di sekitar <strong>${top.demand}%</strong> dari ~${top.job_sample_size} lowongan ${careerText} yang dianalisis ${regionText} (3 bulan terakhir).`;
+    `<strong>${top.skill_name}</strong> appears in about <strong>${top.demand}%</strong> of the ~${top.job_sample_size} ${careerText} job postings analyzed ${regionText}.`;
 }
 
 async function renderDemandList(containerId, items, career) {
   const container = document.getElementById(containerId);
   if (items.length === 0) {
-    container.innerHTML = '<p class="empty-state">Belum ada data untuk kombinasi filter ini.</p>';
+    container.innerHTML = '<p class="empty-state">No data for this filter combination.</p>';
     return;
   }
 
@@ -96,8 +98,10 @@ async function renderDemandList(containerId, items, career) {
 
   container.innerHTML = items.map((i, idx) => {
     const history = trends[idx].status === 200 ? trends[idx].data : [];
-    const sparkline = renderSparkline(history, 70, 22, TREND_COLOR[i.trend]);
-    const tooltip = `${i.skill_name} muncul di ${i.demand}% dari ~${i.job_sample_size} lowongan yang dianalisis${career ? ` untuk ${career.name}` : ''} (periode 3 bulan terakhir).`;
+    const sparkline = history.length >= 2
+      ? renderSparkline(history, 70, 22, TREND_COLOR[i.trend])
+      : '<span class="sparkline-empty" title="Not enough trend data yet">Not enough data</span>';
+    const tooltip = `${i.skill_name} appears in ${i.demand}% of the ~${i.job_sample_size} job postings analyzed${career ? ` for ${career.name}` : ''}.`;
     return `
       <div class="demand-row info-badge" tabindex="0" data-tooltip="${tooltip}">
         <span class="name">${i.skill_name}</span>

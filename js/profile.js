@@ -15,8 +15,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     clearAuthToken();
     window.location.href = 'index.html';
   });
+  // Di mode live belum ada endpoint hapus akun di backend, jadi bagian
+  // "Zona Berbahaya" (yang hanya menghapus data lokal di browser) disembunyikan.
+  if (typeof isLiveMode === 'function' && isLiveMode()) {
+    const resetCard = document.getElementById('resetBtn').closest('.card');
+    if (resetCard) resetCard.style.display = 'none';
+  }
   document.getElementById('resetBtn').addEventListener('click', () => {
-    if (confirm('Yakin ingin menghapus semua data dan keluar? Tindakan ini tidak bisa dibatalkan.')) {
+    if (confirm('Are you sure you want to delete all data and sign out? This cannot be undone.')) {
       // Ini beda dari logout biasa — benar-benar menghapus data akun,
       // bukan cuma mengakhiri sesi. Belum ada endpoint "hapus akun" di
       // dokumen kontrak, jadi masih pakai fungsi lokal langsung.
@@ -38,10 +44,10 @@ function fillForm(profile) {
 
   if (profile.target_career_id) {
     Api.career.get(profile.target_career_id).then(res => {
-      document.getElementById('currentCareerLine').textContent = `Target kamu saat ini: ${res.data.name}.`;
+      document.getElementById('currentCareerLine').textContent = `Your current target: ${res.data.name}.`;
     });
   } else {
-    document.getElementById('currentCareerLine').textContent = 'Kamu belum menetapkan target karier.';
+    document.getElementById('currentCareerLine').textContent = 'You have not set a target career yet.';
   }
 }
 

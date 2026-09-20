@@ -49,12 +49,12 @@ function seedLearningResources() {
 
 function seedDummyUsers() {
   return [
-    { id: 'u1', fullName: 'Naila Ramadhani', university: 'Universitas Airlangga', major: 'Sistem Informasi', targetCareerId: 'data-analyst' },
-    { id: 'u2', fullName: 'Fajar Ardiansyah', university: 'Institut Teknologi Bandung', major: 'Teknik Informatika', targetCareerId: 'software-engineer' },
-    { id: 'u3', fullName: 'Dinda Puspitasari', university: 'Universitas Gadjah Mada', major: 'Manajemen', targetCareerId: 'product-manager' },
-    { id: 'u4', fullName: 'Bima Setiawan', university: 'Universitas Brawijaya', major: 'Teknik Informatika', targetCareerId: 'cloud-engineer' },
-    { id: 'u5', fullName: 'Clara Wijaya', university: 'Universitas Indonesia', major: 'Desain Komunikasi Visual', targetCareerId: 'uiux-designer' },
-    { id: 'u6', fullName: 'Rizky Maulana', university: 'Universitas Diponegoro', major: 'Teknik Informatika', targetCareerId: 'cybersecurity-analyst' },
+    { id: 'u1', fullName: 'Naila Ramadhani', university: 'Universitas Airlangga', major: 'Information Systems', targetCareerId: 'data-analyst' },
+    { id: 'u2', fullName: 'Fajar Ardiansyah', university: 'Institut Teknologi Bandung', major: 'Computer Science', targetCareerId: 'software-engineer' },
+    { id: 'u3', fullName: 'Dinda Puspitasari', university: 'Universitas Gadjah Mada', major: 'Management', targetCareerId: 'product-manager' },
+    { id: 'u4', fullName: 'Bima Setiawan', university: 'Universitas Brawijaya', major: 'Computer Science', targetCareerId: 'cloud-engineer' },
+    { id: 'u5', fullName: 'Clara Wijaya', university: 'Universitas Indonesia', major: 'Visual Communication Design', targetCareerId: 'uiux-designer' },
+    { id: 'u6', fullName: 'Rizky Maulana', university: 'Universitas Diponegoro', major: 'Computer Science', targetCareerId: 'cybersecurity-analyst' },
   ];
 }
 
@@ -69,7 +69,7 @@ function defaultAdminContent() {
     industryInsightMode: 'manual', // 'auto' | 'manual' — lihat app_settings di dokumen BE
     scrapeRuns: [
       { id: 1, startedAt: daysAgoIsoLocal(9), finishedAt: daysAgoIsoLocal(9), status: 'success', jobsFound: 182, jobsProcessed: 182, errorMessage: null },
-      { id: 2, startedAt: daysAgoIsoLocal(2), finishedAt: daysAgoIsoLocal(2), status: 'partial', jobsFound: 140, jobsProcessed: 96, errorMessage: 'ML service timeout pada sebagian batch.' },
+      { id: 2, startedAt: daysAgoIsoLocal(2), finishedAt: daysAgoIsoLocal(2), status: 'partial', jobsFound: 140, jobsProcessed: 96, errorMessage: 'ML service timed out on some batches.' },
     ],
   };
 }
@@ -95,7 +95,7 @@ function getAdminContent() {
     if (!parsed.scrapeRuns) parsed.scrapeRuns = defaultAdminContent().scrapeRuns;
     return parsed;
   } catch (err) {
-    console.warn('SkillBridge: admin content korup, direset.', err);
+    console.warn('SkillBridge: admin content was corrupted and has been reset.', err);
     const fresh = defaultAdminContent();
     localStorage.setItem(ADMIN_CONTENT_KEY, JSON.stringify(fresh));
     return fresh;

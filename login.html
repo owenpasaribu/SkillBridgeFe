@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Masuk — SkillBridge</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#F3EADB">
+<title>Sign In — SkillBridge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/base.css">
@@ -23,11 +25,11 @@
   <div class="auth-card">
     <div class="auth-head">
       <a href="index.html" class="brand" style="justify-content:center;">
-        <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#E3A73B" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#171B2E" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#D9963F" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#2E271E" stroke-width="2.5" stroke-linecap="round"/></svg>
         SkillBridge
       </a>
-      <h2 style="margin-top:16px;">Masuk ke akunmu</h2>
-      <p class="text-sm">Lanjutkan pantau career readiness kamu.</p>
+      <h2 style="margin-top:16px;">Sign in to your account</h2>
+      <p class="text-sm">Keep tracking your career readiness.</p>
     </div>
 
     <div class="card">
@@ -35,28 +37,27 @@
       <form id="loginForm">
         <div class="field">
           <label for="email">Email</label>
-          <input type="email" id="email" required placeholder="nama@kampus.ac.id">
+          <input type="email" id="email" required placeholder="name@university.edu">
         </div>
         <div class="field">
           <div class="flex-between mb-0">
             <label for="password" class="mb-0">Password</label>
-            <a href="forgot-password.html" class="text-sm">Lupa password?</a>
           </div>
           <input type="password" id="password" required placeholder="••••••••">
         </div>
-        <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+        <button type="submit" class="btn btn-primary btn-block">Sign in</button>
       </form>
 
-      <div class="divider">atau</div>
-      <button id="demoBtn" class="btn btn-ghost btn-block">Coba sebagai akun demo (Student)</button>
-      <button id="demoAdminBtn" class="btn btn-ghost btn-block" style="margin-top:8px;">Coba sebagai Admin</button>
+      <div class="divider">or</div>
+      <button id="demoBtn" class="btn btn-ghost btn-block">Try a demo account (Student)</button>
+      <button id="demoAdminBtn" class="btn btn-ghost btn-block" style="margin-top:8px;">Try as Admin</button>
       <p class="field-hint" style="margin-top: 14px; text-align:center;">
-        Satu form login ini berlaku untuk student maupun admin — sistem otomatis mengarahkan sesuai akun. Demo admin: <strong>admin@skillbridge.id</strong> / <strong>admin123</strong>.<br>
-        Prototype ini menyimpan data di browser kamu (localStorage), jadi login hanya berfungsi di perangkat/browser yang sama saat kamu daftar.
+        This one login form works for both students and admins — you are routed automatically based on your account. Demo admin: <strong>admin@skillbridge.id</strong> / <strong>admin123</strong>.<br>
+        This prototype stores its data in your browser (localStorage), so sign-in only works on the same device/browser where you signed up.
       </p>
     </div>
 
-    <p class="auth-foot text-soft">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
+    <p class="auth-foot text-soft">Don't have an account yet? <a href="register.html">Sign up here</a></p>
   </div>
 </div>
 
@@ -65,6 +66,7 @@
 <script src="js/storage.js"></script>
 <script src="js/scoring.js"></script>
 <script src="js/api-mock.js"></script>
+<script src="js/api-live.js"></script>
 <script src="js/api.js"></script>
 <script src="js/auth.js"></script>
 </body>

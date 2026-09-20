@@ -24,7 +24,7 @@ function renderAssessment(questions) {
     return `
       <div class="assess-item" data-skill="${q.skill_id}">
         <h4>${q.skill_name}</h4>
-        <p class="text-sm text-faint">Diberikan tugas yang membutuhkan ${q.skill_name}, mana yang paling menggambarkan kemampuanmu?</p>
+        <p class="text-sm text-faint">${q.question || `You are given a task that requires ${q.skill_name}. Which statement best describes your ability?`}</p>
         <div class="option-list">${optionsHtml}</div>
         <div class="confidence-row">
           <span class="text-sm text-faint">Confidence</span>
@@ -53,7 +53,7 @@ async function submitAssessment(questions) {
   });
 
   if (hasUnanswered) {
-    alert('Jawab semua skenario dulu sebelum submit.');
+    alert('Please answer every scenario before submitting.');
     return;
   }
 

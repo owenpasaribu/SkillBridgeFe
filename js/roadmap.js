@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   const careerRes = await Api.career.get(meRes.data.target_career_id);
   const career = careerRes.data;
-  document.getElementById('pageSub').textContent = `Roadmap menuju ${career.name}.`;
+  document.getElementById('pageSub').textContent = `Your roadmap to becoming a ${career.name}.`;
 
   const roadmapRes = await Api.roadmap.get();
 
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 function renderRoadmap() {
   const doneCount = currentPhases.filter(p => p.status === 'completed').length;
   const pct = currentPhases.length ? Math.round((doneCount / currentPhases.length) * 100) : 0;
-  document.getElementById('roadmapProgressLabel').textContent = `${pct}% selesai (${doneCount}/${currentPhases.length} fase)`;
+  document.getElementById('roadmapProgressLabel').textContent = `${pct}% complete (${doneCount}/${currentPhases.length} phases)`;
   document.getElementById('roadmapProgressFill').style.width = `${pct}%`;
 
   const list = document.getElementById('phaseList');
@@ -53,7 +53,7 @@ function renderRoadmap() {
     const isDone = phase.status === 'completed';
     const resourcesHtml = phase.resources.length
       ? `<ul class="resource-list">${phase.resources.map(r => `<li>${r.title} — <span class="text-faint">${r.provider}</span></li>`).join('')}</ul>`
-      : '<p class="text-sm text-faint">Belum ada resource spesifik untuk fase ini.</p>';
+      : '<p class="text-sm text-faint">No specific resources for this phase yet.</p>';
     const tasksHtml = phase.tasks.length ? `<ul class="text-sm">${phase.tasks.map(t => `<li>${t}</li>`).join('')}</ul>` : '';
 
     return `
@@ -63,10 +63,10 @@ function renderRoadmap() {
             <div class="phase-index ${isDone ? 'is-done' : ''}">${isDone ? '✓' : index + 1}</div>
             <div>
               <strong>Phase ${index + 1} — ${phase.title}</strong>
-              <div class="text-sm text-faint">${phase.duration_days} hari · Priority ${phase.priority} · ${statusLabel(phase.status)}</div>
+              <div class="text-sm text-faint">${phase.duration_days} days · Priority ${phase.priority} · ${statusLabel(phase.status)}</div>
             </div>
           </div>
-          <svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#565B72" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#5F5646" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="accordion-body">
           <h4>Learning Objective</h4>
@@ -81,9 +81,9 @@ function renderRoadmap() {
           <h4>What You'll Be Able To Do After</h4>
           <p class="text-sm">${phase.after_text}</p>
           <div class="phase-actions">
-            ${phase.status === 'not_started' ? `<button class="btn btn-primary btn-sm" data-start="${phase.id}">Mulai Modul</button>` : ''}
-            ${phase.status === 'in_progress' ? `<button class="btn btn-primary btn-sm" data-complete="${phase.id}">Tandai Selesai</button>` : ''}
-            ${phase.status === 'completed' ? `<span class="badge badge-success">Selesai</span>` : ''}
+            ${phase.status === 'not_started' ? `<button class="btn btn-primary btn-sm" data-start="${phase.id}">Start Module</button>` : ''}
+            ${phase.status === 'in_progress' ? `<button class="btn btn-primary btn-sm" data-complete="${phase.id}">Mark Complete</button>` : ''}
+            ${phase.status === 'completed' ? `<span class="badge badge-success">Completed</span>` : ''}
           </div>
         </div>
       </div>`;
@@ -101,7 +101,7 @@ function renderRoadmap() {
 }
 
 function statusLabel(status) {
-  return { not_started: 'Belum dimulai', in_progress: 'Sedang berjalan', completed: 'Selesai' }[status] || status;
+  return { not_started: 'Not started', in_progress: 'In progress', completed: 'Completed' }[status] || status;
 }
 
 async function updatePhaseStatus(phaseId, status) {

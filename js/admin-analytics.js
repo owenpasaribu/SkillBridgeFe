@@ -15,6 +15,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function renderGrowthChart(growth) {
+  if (!growth || growth.length < 2) {
+    document.getElementById('growthChart').innerHTML = '<p class="empty-state">No user growth data yet.</p>';
+    return;
+  }
   const width = 600, height = 160, padding = 24;
   const max = Math.max(...growth);
   const step = (width - padding * 2) / (growth.length - 1);
@@ -29,14 +33,14 @@ function renderGrowthChart(growth) {
   const dots = growth.map((v, i) => {
     const x = padding + i * step;
     const y = height - padding - (v / max) * (height - padding * 2);
-    return `<circle cx="${x}" cy="${y}" r="4" fill="#37409C"></circle>`;
+    return `<circle cx="${x}" cy="${y}" r="4" fill="#55662E"></circle>`;
   }).join('');
 
-  const labels = months.map((m, i) => `<text x="${padding + i * step}" y="${height - 4}" font-size="10" fill="#8A8FA3" text-anchor="middle">${m}</text>`).join('');
+  const labels = months.map((m, i) => `<text x="${padding + i * step}" y="${height - 4}" font-size="10" fill="#6F644D" text-anchor="middle">${m}</text>`).join('');
 
   document.getElementById('growthChart').innerHTML = `
     <svg viewBox="0 0 ${width} ${height}" style="width:100%; height:auto;">
-      <polyline points="${points}" fill="none" stroke="#37409C" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <polyline points="${points}" fill="none" stroke="#55662E" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
       ${dots}${labels}
     </svg>`;
 }
@@ -44,7 +48,7 @@ function renderGrowthChart(growth) {
 function renderCareerDistribution(distribution) {
   const container = document.getElementById('careerDistribution');
   if (!distribution || distribution.length === 0) {
-    container.innerHTML = '<p class="empty-state">Belum ada data.</p>';
+    container.innerHTML = '<p class="empty-state">No data yet.</p>';
     return;
   }
   const total = distribution.reduce((s, d) => s + d.count, 0);
@@ -63,6 +67,10 @@ function renderCareerDistribution(distribution) {
 
 function renderGapDistribution(distribution) {
   const container = document.getElementById('gapDistribution');
+  if (!distribution || distribution.length === 0) {
+    container.innerHTML = '<p class="empty-state">No data yet.</p>';
+    return;
+  }
   const classMap = { 'Critical Gap': 'is-critical', 'Moderate Gap': 'is-warning', 'Small Gap': '', 'Strong Match': 'is-success' };
   container.innerHTML = distribution.map(g => `
     <div class="demand-row">

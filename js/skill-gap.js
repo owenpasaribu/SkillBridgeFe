@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  document.getElementById('pageSub').textContent = `Target karier kamu saat ini: ${gapRes.data.career_name}.`;
+  document.getElementById('pageSub').textContent = `Your current target career: ${gapRes.data.career_name}.`;
   document.getElementById('gapBody').hidden = false;
 
   const gaps = gapRes.data.gaps;
@@ -58,16 +58,16 @@ function renderCompareVisual(gaps) {
 
 function gapReason(g, careerName) {
   if (g.category === 'strong') {
-    return `${g.skill_name} sudah sesuai atau melampaui standar yang dibutuhkan ${careerName} — pertahankan levelnya.`;
+    return `${g.skill_name} meets or exceeds the standard required for ${careerName} — keep your level up.`;
   }
-  return `${g.skill_name} berstatus ${g.priority} karena demand skill ini di industri cukup tinggi (${g.demand}%) dan level kamu saat ini (${g.user_level}%) masih ${Math.abs(g.gap_value)}% di bawah standar (${g.required_level}%) untuk ${careerName}.`;
+  return `${g.skill_name} is ${g.priority} priority because industry demand for this skill is fairly high (${g.demand}%) and your current level (${g.user_level}%) is still ${Math.abs(g.gap_value)}% below the standard (${g.required_level}%) for ${careerName}.`;
 }
 
 function renderReasons(gaps, careerName) {
   const list = document.getElementById('reasonList');
   const relevant = gaps.filter(g => g.category !== 'strong');
   if (relevant.length === 0) {
-    list.innerHTML = '<p class="text-sm">Semua skill kamu sudah memenuhi standar target karier ini. Fokus selanjutnya bisa ke Portfolio Readiness.</p>';
+    list.innerHTML = '<p class="text-sm">All of your skills already meet the standard for this target career. Next, focus on Portfolio Readiness.</p>';
     return;
   }
   list.innerHTML = relevant.map(g => `<div class="reason-item"><p class="text-sm mb-0">${gapReason(g, careerName)}</p></div>`).join('');

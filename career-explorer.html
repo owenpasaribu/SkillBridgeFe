@@ -1,20 +1,21 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#F3EADB">
 <title>Career Explorer — SkillBridge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/components.css">
 <style>
-  .explorer-filters { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px; }
-  .explorer-filters input, .explorer-filters select { min-width: 180px; }
   .explorer-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
   @media (max-width: 960px) { .explorer-grid { grid-template-columns: repeat(2,1fr); } }
   @media (max-width: 620px) { .explorer-grid { grid-template-columns: 1fr; } }
-  .explorer-card-foot { display:flex; justify-content:space-between; align-items:center; margin-top:14px; }
+  .explorer-grid .card { display:flex; flex-direction:column; }
+  .explorer-card-foot { display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:14px; }
   .tool-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
 </style>
 </head>
@@ -22,7 +23,7 @@
 <div class="app-shell">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#E3A73B" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#171B2E" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#D9963F" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#2E271E" stroke-width="2.5" stroke-linecap="round"/></svg>
       SkillBridge
     </div>
     <ul class="sidebar-nav">
@@ -37,12 +38,12 @@
       <li><a href="profile.html"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c1.5-4 4-6 7-6s5.5 2 7 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Profile &amp; Settings</a></li>
     </ul>
     <div class="sidebar-footer">
-      <a href="#" data-action="logout" class="btn btn-ghost btn-sm btn-block">Keluar</a>
+      <a href="#" data-action="logout" class="btn btn-ghost btn-sm btn-block">Sign out</a>
     </div>
   </aside>
   <div class="app-main">
     <div class="app-topbar">
-      <button data-action="toggle-sidebar" class="nav-toggle" style="display:inline-flex;" aria-label="Buka menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#171B2E" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <button data-action="toggle-sidebar" class="nav-toggle" style="display:inline-flex;" aria-label="Open menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#2E271E" stroke-width="2" stroke-linecap="round"/></svg></button>
       <span class="brand" style="font-size:1rem;">SkillBridge</span>
       <span style="width:22px;"></span>
     </div>
@@ -50,21 +51,26 @@
       <div class="flex-between" style="margin-bottom:8px; align-items:flex-start;">
         <div>
           <h2 style="margin-bottom:4px;">Career Explorer</h2>
-          <p class="text-soft">Lihat skill yang dibutuhkan tiap karier sebelum menetapkan target.</p>
+          <p class="text-soft">See the skills each career requires before you set a target.</p>
         </div>
       </div>
 
-      <div class="explorer-filters">
-        <input type="text" id="searchInput" placeholder="Cari nama karier...">
-        <select id="categoryFilter"><option value="">Semua kategori</option></select>
-        <select id="difficultyFilter"><option value="">Semua level kesulitan</option></select>
-        <label class="chip" style="cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
-          <input type="checkbox" id="remoteFilter" style="width:auto;"> Remote-friendly saja
+      <div class="filter-bar">
+        <div class="filter-search">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="text" id="searchInput" placeholder="Search career name..." aria-label="Search career name">
+        </div>
+        <select id="categoryFilter" class="select-modern" aria-label="Filter by category"><option value="">All categories</option></select>
+        <select id="difficultyFilter" class="select-modern" aria-label="Filter by difficulty level"><option value="">All difficulty levels</option></select>
+        <label class="filter-toggle">
+          <input type="checkbox" id="remoteFilter">
+          <span class="switch" aria-hidden="true"></span>
+          Remote-friendly only
         </label>
       </div>
 
       <div class="explorer-grid" id="careerGrid"></div>
-      <p class="empty-state" id="emptyState" hidden>Tidak ada karier yang cocok dengan filter kamu.</p>
+      <p class="empty-state" id="emptyState" hidden>No careers match your filters.</p>
     </div>
   </div>
 </div>
@@ -74,6 +80,7 @@
 <script src="js/storage.js"></script>
 <script src="js/scoring.js"></script>
 <script src="js/api-mock.js"></script>
+<script src="js/api-live.js"></script>
 <script src="js/api.js"></script>
 <script src="js/main.js"></script>
 <script src="js/career-explorer.js"></script>

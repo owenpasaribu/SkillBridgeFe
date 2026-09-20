@@ -8,7 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
   highlightActiveNav();
   bindLogoutButtons();
   bindMobileTopnavToggle();
+  hideMockOnlyNotes();
 });
+
+/**
+ * Label "Demo Data" / catatan simulasi hanya benar untuk mode mock.
+ * Di mode live datanya dari backend, jadi elemen bertanda data-mock-only disembunyikan.
+ */
+function hideMockOnlyNotes() {
+  if (typeof isLiveMode !== 'function' || !isLiveMode()) return;
+  document.querySelectorAll('[data-mock-only]').forEach(el => { el.hidden = true; el.style.display = 'none'; });
+}
 
 function initSidebarToggle() {
   const toggle = document.querySelector('[data-action="toggle-sidebar"]');
@@ -34,7 +44,7 @@ function bindMobileTopnavToggle() {
     links.style.top = '72px';
     links.style.left = '0';
     links.style.right = '0';
-    links.style.background = '#fff';
+    links.style.background = 'var(--color-surface)';
     links.style.padding = '16px 24px';
     links.style.borderBottom = '1px solid var(--color-border)';
   });
@@ -67,6 +77,9 @@ function readinessBadgeClass(label) {
     Developing: 'badge-warning',
     Ready: 'badge-success',
     'Highly Ready': 'badge-success',
+    // Label yang dikirim backend (ReadinessController)
+    'Not Ready': 'badge-critical',
+    'Almost Ready': 'badge-warning',
   }[label] || 'badge-neutral';
 }
 
@@ -83,7 +96,7 @@ function initials(fullName) {
  * Render sparkline (mini trend chart) dari array {month, value}.
  * Dipakai di Industry Insights untuk menunjukkan naik/turunnya demand skill.
  */
-function renderSparkline(points, width = 100, height = 28, color = '#37409C') {
+function renderSparkline(points, width = 100, height = 28, color = '#55662E') {
   if (!points || points.length < 2) return '';
   const max = Math.max(...points.map(p => p.value));
   const min = Math.min(...points.map(p => p.value));

@@ -52,7 +52,7 @@ function renderTable(skills) {
       <td>${usageCountMap[s.id] || 0} career</td>
       <td class="action-cell">
         <button class="btn btn-ghost btn-sm" data-edit="${s.id}">Edit</button>
-        <button class="btn btn-danger btn-sm" data-delete="${s.id}">Hapus</button>
+        <button class="btn btn-danger btn-sm" data-delete="${s.id}">Delete</button>
       </td>
     </tr>`).join('');
 
@@ -66,7 +66,7 @@ function renderTable(skills) {
 
 function openForm(skill) {
   editingSkillId = skill ? skill.id : null;
-  document.getElementById('formTitle').textContent = skill ? `Edit — ${skill.name}` : 'Tambah Skill';
+  document.getElementById('formTitle').textContent = skill ? `Edit — ${skill.name}` : 'Add Skill';
   document.getElementById('f-skillname').value = skill ? skill.name : '';
   document.getElementById('f-skillcategory').value = skill ? skill.category : 'technical';
   const panel = document.getElementById('formPanel');
@@ -81,7 +81,7 @@ function closeForm() {
 
 async function saveSkill() {
   const name = document.getElementById('f-skillname').value.trim();
-  if (!name) { alert('Nama skill wajib diisi.'); return; }
+  if (!name) { alert('Skill name is required.'); return; }
   const category = document.getElementById('f-skillcategory').value;
 
   const res = editingSkillId
@@ -96,8 +96,8 @@ async function saveSkill() {
 async function deleteSkill(id) {
   const used = usageCountMap[id] || 0;
   const msg = used > 0
-    ? `Skill ini dipakai di ${used} career. Menghapusnya tidak akan menghapus requirement di career tersebut, tapi nama skill tidak akan muncul lagi. Lanjutkan?`
-    : 'Hapus skill ini?';
+    ? `This skill is used in ${used} career(s). Deleting it will not remove the requirement from those careers, but the skill name will no longer appear. Continue?`
+    : 'Delete this skill?';
   if (!confirm(msg)) return;
   await Api.admin.skills.remove(id);
   reloadTable();

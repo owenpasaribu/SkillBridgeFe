@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#F3EADB">
 <title>User Management — SkillBridge Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +18,7 @@
 <div class="app-shell">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#E3A73B" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#171B2E" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#D9963F" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#2E271E" stroke-width="2.5" stroke-linecap="round"/></svg>
       SkillBridge <span class="badge badge-primary" style="margin-left:2px;">Admin</span>
     </div>
     <ul class="sidebar-nav">
@@ -27,26 +29,27 @@
       <li><a href="admin-learning-resources.html"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" stroke-width="1.8"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="1.8"/></svg> Learning Resources</a></li>
       <li><a href="admin-users.html"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 20c1.3-3.6 3.6-5.4 6.5-5.4s5.2 1.8 6.5 5.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="18" cy="8.5" r="2.4" stroke="currentColor" stroke-width="1.8"/><path d="M16 15c2.4.2 4 1.7 5 4.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Users</a></li>
       <li><a href="admin-analytics.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l3 8 4-16 3 8h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Analytics</a></li>
+      <li><a href="admin-scrape-runs.html"><svg viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 11-2.3-5.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M20 4v4h-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Data Pipeline</a></li>
       <li><a href="admin-settings.html"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1h.1a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z" stroke="currentColor" stroke-width="1.5"/></svg> Settings</a></li>
     </ul>
     <div class="sidebar-footer">
-      <p class="text-sm text-faint" style="margin:0 0 10px;"><a href="index.html">&larr; Keluar dari Admin Mode</a></p>
-      <a href="#" data-action="logout-admin" class="btn btn-ghost btn-sm btn-block">Keluar</a>
+      <p class="text-sm text-faint" style="margin:0 0 10px;"><a href="index.html">&larr; Exit Admin Mode</a></p>
+      <a href="#" data-action="logout-admin" class="btn btn-ghost btn-sm btn-block">Sign out</a>
     </div>
   </aside>
   <div class="app-main">
     <div class="app-topbar">
-      <button data-action="toggle-sidebar" class="nav-toggle" style="display:inline-flex;" aria-label="Buka menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#171B2E" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <button data-action="toggle-sidebar" class="nav-toggle" style="display:inline-flex;" aria-label="Open menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#2E271E" stroke-width="2" stroke-linecap="round"/></svg></button>
       <span class="brand" style="font-size:1rem;">SkillBridge</span>
       <span style="width:22px;"></span>
     </div>
     <div class="app-content">
       <h2 style="margin-bottom:4px;">User Management</h2>
-      <p class="text-soft">Daftar mahasiswa terdaftar (read-only, sesuai dokumen kontrak). <span class="badge badge-demo info-badge" tabindex="0" data-tooltip="Sebagian baris di tabel ini adalah user contoh untuk kebutuhan demo. Baris bertanda 'Akun aktif di browser ini' adalah data asli dari akun student yang sedang login.">Sebagian adalah user contoh ⓘ</span></p>
+      <p class="text-soft">List of registered students (read-only). <span class="badge badge-demo info-badge" data-mock-only tabindex="0" data-tooltip="Some rows in this table are sample users for demo purposes. Rows marked 'Active account in this browser' come from the student account that is currently signed in.">Some are sample users ⓘ</span></p>
 
       <div class="table-wrap">
         <table class="data-table">
-          <thead><tr><th>Nama</th><th>Target Career</th><th>Readiness</th></tr></thead>
+          <thead><tr><th>Name</th><th>Target Career</th><th>Readiness</th></tr></thead>
           <tbody id="userTableBody"></tbody>
         </table>
       </div>
@@ -59,6 +62,7 @@
 <script src="js/storage.js"></script>
 <script src="js/scoring.js"></script>
 <script src="js/api-mock.js"></script>
+<script src="js/api-live.js"></script>
 <script src="js/api.js"></script>
 <script src="js/main.js"></script>
 <script src="js/admin-users.js"></script>

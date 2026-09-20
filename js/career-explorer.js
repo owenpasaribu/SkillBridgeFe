@@ -56,18 +56,16 @@ async function renderGrid() {
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <div class="flex-between" style="align-items:flex-start;">
-        <div>
-          <p class="card-eyebrow">${career.category} · ${career.difficulty}</p>
-          <h3 style="margin-bottom:6px;">${career.name}</h3>
-        </div>
-        ${isTarget ? '<span class="badge badge-primary">Target Kamu</span>' : ''}
+      <p class="card-eyebrow">${career.category} · ${career.difficulty}</p>
+      <h3 style="margin-bottom:8px;">${career.name}</h3>
+      <div class="badge-row">
+        ${isTarget ? '<span class="badge badge-primary">Your Target</span>' : ''}
         ${career.remote_friendly ? '<span class="badge badge-neutral">Remote-friendly</span>' : ''}
       </div>
       <p class="text-sm">${career.short_description}</p>
       <div class="explorer-card-foot">
         <span class="text-sm text-faint">Demand: ${career.industry_demand}%</span>
-        <a href="career-detail.html?slug=${career.slug}" class="btn btn-ghost btn-sm">Lihat Detail</a>
+        <a href="career-detail.html?slug=${career.slug}" class="btn btn-ghost btn-sm">View Details</a>
       </div>`;
     grid.appendChild(card);
   });

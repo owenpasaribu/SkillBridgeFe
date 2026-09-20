@@ -28,7 +28,7 @@ async function renderTable() {
 
   const tbody = document.getElementById('resourceTableBody');
   if (list.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5"><p class="empty-state">Belum ada resource.</p></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5"><p class="empty-state">No resources yet.</p></td></tr>';
     return;
   }
 
@@ -40,7 +40,7 @@ async function renderTable() {
       <td><span class="badge badge-neutral">${r.type}</span></td>
       <td class="action-cell">
         <button class="btn btn-ghost btn-sm" data-edit="${r.id}">Edit</button>
-        <button class="btn btn-danger btn-sm" data-delete="${r.id}">Hapus</button>
+        <button class="btn btn-danger btn-sm" data-delete="${r.id}">Delete</button>
       </td>
     </tr>`).join('');
 
@@ -54,13 +54,14 @@ async function renderTable() {
 
 function openForm(resource) {
   editingResourceId = resource ? resource.id : null;
-  document.getElementById('formTitle').textContent = resource ? 'Edit Resource' : 'Tambah Resource';
+  document.getElementById('formTitle').textContent = resource ? 'Edit Resource' : 'Add Resource';
 
   const skillSelect = document.getElementById('f-skill');
   skillSelect.innerHTML = skillsCache.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
 
   document.getElementById('f-skill').value = resource ? resource.skill_id : skillsCache[0]?.id;
   document.getElementById('f-title').value = resource ? resource.title : '';
+  document.getElementById('f-url').value = resource && resource.url ? resource.url : '';
   document.getElementById('f-provider').value = resource ? resource.provider : '';
   document.getElementById('f-type').value = resource ? resource.type : 'course';
 
@@ -76,12 +77,16 @@ function closeForm() {
 
 async function saveResource() {
   const title = document.getElementById('f-title').value.trim();
-  if (!title) { alert('Judul resource wajib diisi.'); return; }
+  if (!title) { alert('Resource title is required.'); return; }
+
+  const url = document.getElementById('f-url').value.trim();
+  if (!url) { alert('Resource URL is required.'); return; }
 
   const body = {
     skill_id: document.getElementById('f-skill').value,
     title,
-    provider: document.getElementById('f-provider').value.trim() || 'Tidak diketahui',
+    url,
+    provider: document.getElementById('f-provider').value.trim() || 'Unknown',
     type: document.getElementById('f-type').value,
   };
 
@@ -95,7 +100,7 @@ async function saveResource() {
 }
 
 async function deleteResource(id) {
-  if (!confirm('Hapus resource ini?')) return;
+  if (!confirm('Delete this resource?')) return;
   await Api.admin.learningResources.remove(id);
   renderTable();
 }

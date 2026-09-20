@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#F3EADB">
 <title>Onboarding — SkillBridge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -37,12 +39,12 @@
 <div class="onboarding-wrap">
   <div class="onboarding-head">
     <a href="index.html" class="brand">
-      <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#E3A73B" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#171B2E" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#D9963F" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#2E271E" stroke-width="2.5" stroke-linecap="round"/></svg>
       SkillBridge
     </a>
     <div class="onboarding-progress">
       <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:20%"></div></div>
-      <p class="text-sm text-faint" id="stepLabel" style="margin:0;">Step 1 dari 5 — Basic Profile</p>
+      <p class="text-sm text-faint" id="stepLabel" style="margin:0;">Step 1 of 5 — Basic Profile</p>
     </div>
   </div>
 
@@ -51,31 +53,35 @@
 
       <section class="onboarding-step" data-step="1">
         <h3>Basic Profile</h3>
-        <p class="text-sm">Pastikan data ini sesuai — dipakai untuk personalisasi rekomendasi kamu.</p>
-        <div class="field"><label for="ob-fullName">Nama Lengkap</label><input type="text" id="ob-fullName"></div>
-        <div class="field"><label for="ob-university">Universitas</label><input type="text" id="ob-university"></div>
+        <p class="text-sm">Make sure these details are correct — they are used to personalize your recommendations.</p>
+        <div class="field"><label for="ob-fullName">Full Name</label><input type="text" id="ob-fullName"></div>
+        <div class="field"><label for="ob-university">University</label><input type="text" id="ob-university"></div>
         <div class="field-row">
-          <div class="field"><label for="ob-major">Jurusan</label><input type="text" id="ob-major"></div>
+          <div class="field"><label for="ob-major">Major</label><input type="text" id="ob-major"></div>
           <div class="field"><label for="ob-semester">Semester</label><input type="number" id="ob-semester" min="1" max="14"></div>
         </div>
-        <div class="field"><label for="ob-gradYear">Perkiraan Tahun Lulus</label><input type="number" id="ob-gradYear"></div>
+        <div class="field"><label for="ob-gradYear">Expected Graduation Year</label><input type="number" id="ob-gradYear"></div>
       </section>
 
       <section class="onboarding-step" data-step="2" hidden>
         <h3>Choose Career Interest</h3>
-        <p class="text-sm">Pilih satu karier yang ingin kamu tuju. Kamu bisa menggantinya kapan saja nanti.</p>
+        <p class="text-sm">Choose the one career you are aiming for. You can change it at any time later.</p>
         <div class="career-pick-grid" id="careerPickGrid"></div>
       </section>
 
       <section class="onboarding-step" data-step="3" hidden>
         <h3>Select Current Skills</h3>
-        <p class="text-sm">Pilih skill yang pernah kamu pelajari, sekalipun masih dasar.</p>
+        <p class="text-sm">Select the skills you have learned, even if only at a basic level.</p>
+        <div class="filter-search" style="margin: 4px 0 18px;">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="text" id="skillSearch" placeholder="Search skills..." aria-label="Search skills" autocomplete="off">
+        </div>
         <div id="skillPickArea"></div>
       </section>
 
       <section class="onboarding-step" data-step="4" hidden>
         <h3>Rate Skill Level</h3>
-        <p class="text-sm">Untuk tiap skill yang kamu pilih, tandai level kamu saat ini.</p>
+        <p class="text-sm">For each skill you selected, mark your current level.</p>
         <div id="levelRateArea"></div>
       </section>
 
@@ -83,7 +89,7 @@
         <h3>Set Career Goal</h3>
         <p class="text-sm" id="goalSummary"></p>
         <div class="field">
-          <label for="ob-timeline">Target saya siap dalam berapa bulan?</label>
+          <label for="ob-timeline">I want to be ready in how many months?</label>
           <input type="number" id="ob-timeline" min="1" max="36" value="12">
         </div>
       </section>
@@ -91,8 +97,8 @@
     </div>
 
     <div class="flex-between" style="margin-top:20px;">
-      <button id="backBtn" class="btn btn-ghost">Kembali</button>
-      <button id="nextBtn" class="btn btn-primary">Lanjut</button>
+      <button id="backBtn" class="btn btn-ghost">Back</button>
+      <button id="nextBtn" class="btn btn-primary">Next</button>
     </div>
   </div>
 </div>
@@ -100,8 +106,8 @@
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
   <div>
-    <h3 style="color:#fff;">Menghitung Career Readiness kamu…</h3>
-    <p style="color:rgba(255,255,255,0.75);">Menyusun learning roadmap awal berdasarkan skill gap.</p>
+    <h3 style="color:#fff;">Calculating your Career Readiness…</h3>
+    <p style="color:rgba(255,255,255,0.75);">Building your initial learning roadmap from your skill gaps.</p>
   </div>
 </div>
 
@@ -110,6 +116,7 @@
 <script src="js/storage.js"></script>
 <script src="js/scoring.js"></script>
 <script src="js/api-mock.js"></script>
+<script src="js/api-live.js"></script>
 <script src="js/api.js"></script>
 <script src="js/onboarding.js"></script>
 </body>

@@ -1,10 +1,9 @@
 /**
  * SkillBridge — wizard onboarding (5 langkah).
- * Sudah lewat Api.* — lihat js/api.js. Satu catatan integrasi: memilih
- * skill di Step 3 butuh daftar SEMUA skill (bukan cuma yang dibutuhkan
- * satu career), tapi dokumen API contract belum punya endpoint publik
- * "GET /skills". Untuk sementara masih pakai getAllSkills() langsung —
- * tolong diomongin ke tim BE supaya endpoint ini ditambahkan.
+ * Sudah lewat Api.* — lihat js/api.js. Memilih skill di Step 3 butuh daftar
+ * SEMUA skill (bukan cuma yang dibutuhkan satu career) → Api.skills.list().
+ * Backend belum punya GET /skills publik, jadi di mode live daftar itu
+ * dirangkai dari katalog skill di js/api-live.js.
  */
 
 const LEVEL_OPTIONS = [
@@ -18,6 +17,7 @@ const LEVEL_OPTIONS = [
 let currentStep = 1;
 const TOTAL_STEPS = 5;
 let careersCache = [];
+let skillsCache = [];
 
 const draft = {
   selectedCareerId: null,
@@ -39,7 +39,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('ob-gradYear').value = meRes.data.graduation_year || '';
 
   await renderCareerPicker();
+  const skillsRes = await Api.skills.list();
+  skillsCache = skillsRes.data || [];
   renderSkillPicker();
+  document.getElementById('skillSearch').addEventListener('input', renderSkillPicker);
 
   document.getElementById('nextBtn').addEventListener('click', handleNext);
   document.getElementById('backBtn').addEventListener('click', handleBack);
@@ -48,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function renderCareerPicker() {
   const grid = document.getElementById('careerPickGrid');
-  grid.innerHTML = '<p class="text-sm text-faint">Memuat daftar career...</p>';
+  grid.innerHTML = '<p class="text-sm text-faint">Loading careers...</p>';
 
   const res = await Api.career.list();
   careersCache = res.data;
@@ -68,33 +71,67 @@ async function renderCareerPicker() {
   });
 }
 
+/** Skill yang dibutuhkan career target (untuk ditampilkan paling atas). */
+let recommendedSkillIds = new Set();
+
+/** Memuat daftar skill (di mode live ditambah skill milik career yang dipilih) + rekomendasi. */
+async function refreshSkillPicker() {
+  const [skillsRes, careerRes] = await Promise.all([
+    Api.skills.list(draft.selectedCareerId),
+    draft.selectedCareerId ? Api.career.get(draft.selectedCareerId) : Promise.resolve(null),
+  ]);
+  if (skillsRes.status === 200 && Array.isArray(skillsRes.data)) skillsCache = skillsRes.data;
+  recommendedSkillIds = new Set(
+    careerRes && careerRes.status === 200 ? careerRes.data.required_skills.map(r => r.skill_id) : []
+  );
+  renderSkillPicker();
+}
+
+function skillChip(skill) {
+  const chip = document.createElement('button');
+  chip.type = 'button';
+  chip.className = 'chip' + (draft.selectedSkills.has(skill.id) ? ' is-selected' : '');
+  chip.textContent = skill.name;
+  chip.addEventListener('click', () => {
+    if (draft.selectedSkills.has(skill.id)) {
+      draft.selectedSkills.delete(skill.id);
+      chip.classList.remove('is-selected');
+    } else {
+      draft.selectedSkills.add(skill.id);
+      chip.classList.add('is-selected');
+    }
+  });
+  return chip;
+}
+
 function renderSkillPicker() {
   const area = document.getElementById('skillPickArea');
+  const searchEl = document.getElementById('skillSearch');
+  const query = ((searchEl && searchEl.value) || '').trim().toLowerCase();
+  const matches = skill => !query || skill.name.toLowerCase().includes(query);
+
+  const groups = [];
+  const recommended = skillsCache.filter(s => recommendedSkillIds.has(s.id) && matches(s));
+  if (recommended.length) groups.push({ label: 'Recommended for your target career', skills: recommended });
+  [['technical', 'Technical Skills'], ['soft', 'Soft Skills']].forEach(([cat, label]) => {
+    const list = skillsCache.filter(s => s.category === cat && !recommendedSkillIds.has(s.id) && matches(s));
+    if (list.length) groups.push({ label, skills: list });
+  });
+
   area.innerHTML = '';
-  ['technical', 'soft'].forEach(cat => {
+  if (groups.length === 0) {
+    area.innerHTML = '<p class="empty-state">No skills match your search.</p>';
+    return;
+  }
+  groups.forEach(group => {
     const label = document.createElement('p');
     label.className = 'skill-group-label';
-    label.textContent = cat === 'technical' ? 'Technical Skills' : 'Soft Skills';
+    label.textContent = group.label;
     area.appendChild(label);
 
     const grid = document.createElement('div');
     grid.className = 'chip-grid';
-    getAllSkills().filter(s => s.category === cat).forEach(skill => {
-      const chip = document.createElement('button');
-      chip.type = 'button';
-      chip.className = 'chip';
-      chip.textContent = skill.name;
-      chip.addEventListener('click', () => {
-        if (draft.selectedSkills.has(skill.id)) {
-          draft.selectedSkills.delete(skill.id);
-          chip.classList.remove('is-selected');
-        } else {
-          draft.selectedSkills.add(skill.id);
-          chip.classList.add('is-selected');
-        }
-      });
-      grid.appendChild(chip);
-    });
+    group.skills.forEach(skill => grid.appendChild(skillChip(skill)));
     area.appendChild(grid);
   });
 }
@@ -103,7 +140,7 @@ function renderLevelRater() {
   const area = document.getElementById('levelRateArea');
   area.innerHTML = '';
   if (draft.selectedSkills.size === 0) {
-    area.innerHTML = '<p class="empty-state">Kamu belum memilih skill di langkah sebelumnya.</p>';
+    area.innerHTML = '<p class="empty-state">You have not selected any skills in the previous step.</p>';
     return;
   }
   draft.selectedSkills.forEach(skillId => {
@@ -112,7 +149,8 @@ function renderLevelRater() {
     const btnsHtml = LEVEL_OPTIONS.map(opt =>
       `<button type="button" class="level-btn" data-skill="${skillId}" data-value="${opt.value}">${opt.label}</button>`
     ).join('');
-    row.innerHTML = `<strong>${skillName(skillId)}</strong><div class="level-btns">${btnsHtml}</div>`;
+    const skill = skillsCache.find(s => s.id === skillId);
+    row.innerHTML = `<strong>${skill ? skill.name : skillName(skillId)}</strong><div class="level-btns">${btnsHtml}</div>`;
     area.appendChild(row);
   });
 
@@ -131,8 +169,8 @@ function renderGoalSummary() {
   const career = careersCache.find(c => c.id === draft.selectedCareerId);
   const summary = document.getElementById('goalSummary');
   summary.textContent = career
-    ? `Target saya adalah menjadi ${career.name}.`
-    : 'Kamu belum memilih target karier.';
+    ? `My target is to become a ${career.name}.`
+    : 'You have not chosen a target career yet.';
 }
 
 function updateStepUI() {
@@ -141,10 +179,11 @@ function updateStepUI() {
   });
   document.getElementById('progressFill').style.width = `${(currentStep / TOTAL_STEPS) * 100}%`;
   const titles = ['Basic Profile', 'Choose Career Interest', 'Select Current Skills', 'Rate Skill Level', 'Set Career Goal'];
-  document.getElementById('stepLabel').textContent = `Step ${currentStep} dari ${TOTAL_STEPS} — ${titles[currentStep - 1]}`;
+  document.getElementById('stepLabel').textContent = `Step ${currentStep} of ${TOTAL_STEPS} — ${titles[currentStep - 1]}`;
   document.getElementById('backBtn').style.visibility = currentStep === 1 ? 'hidden' : 'visible';
-  document.getElementById('nextBtn').textContent = currentStep === TOTAL_STEPS ? 'Selesai & Lihat Dashboard' : 'Lanjut';
+  document.getElementById('nextBtn').textContent = currentStep === TOTAL_STEPS ? 'Finish & View Dashboard' : 'Next';
 
+  if (currentStep === 3) refreshSkillPicker();
   if (currentStep === 4) renderLevelRater();
   if (currentStep === 5) renderGoalSummary();
 }
@@ -153,20 +192,20 @@ function validateStep() {
   if (currentStep === 1) {
     const required = ['ob-fullName', 'ob-university', 'ob-major', 'ob-semester', 'ob-gradYear'];
     const ok = required.every(id => document.getElementById(id).value.trim() !== '');
-    if (!ok) alert('Lengkapi dulu semua data profil dasar kamu.');
+    if (!ok) alert('Please complete all of your basic profile details first.');
     return ok;
   }
   if (currentStep === 2) {
-    if (!draft.selectedCareerId) alert('Pilih satu target karier dulu.');
+    if (!draft.selectedCareerId) alert('Please choose one target career first.');
     return !!draft.selectedCareerId;
   }
   if (currentStep === 3) {
-    if (draft.selectedSkills.size === 0) alert('Pilih minimal satu skill yang pernah kamu pelajari.');
+    if (draft.selectedSkills.size === 0) alert('Please select at least one skill you have learned.');
     return draft.selectedSkills.size > 0;
   }
   if (currentStep === 4) {
     const allRated = [...draft.selectedSkills].every(id => draft.skillLevels[id] !== undefined);
-    if (!allRated) alert('Beri level untuk semua skill yang kamu pilih.');
+    if (!allRated) alert('Please rate your level for every skill you selected.');
     return allRated;
   }
   return true;

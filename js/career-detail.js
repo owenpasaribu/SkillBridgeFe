@@ -37,11 +37,11 @@ function renderCareer(profile, career, skillLevelMap) {
 
   document.getElementById('toolsList').innerHTML = career.tools.map(t => `<span class="badge badge-neutral">${t}</span>`).join('');
   document.getElementById('demandFill').style.width = `${career.industry_demand}%`;
-  document.getElementById('demandLabel').textContent = `${career.industry_demand}% dari ~${career.job_sample_size} lowongan ${career.name} yang dianalisis mencari profil seperti ini (3 bulan terakhir, Demo Data).`;
+  document.getElementById('demandLabel').textContent = `${career.industry_demand}% of the ~${career.job_sample_size} ${career.name} job postings analyzed look for a profile like this.`;
 
   const setGoalBtn = document.getElementById('setGoalBtn');
   const isTarget = profile.target_career_id === career.id;
-  setGoalBtn.textContent = isTarget ? 'Karier Target Kamu Saat Ini' : 'Set as My Career Goal';
+  setGoalBtn.textContent = isTarget ? 'Your Current Target Career' : 'Set as My Career Goal';
   setGoalBtn.disabled = isTarget;
   setGoalBtn.addEventListener('click', async () => {
     setGoalBtn.disabled = true;
@@ -93,5 +93,5 @@ async function renderRelated(career) {
     <a href="career-detail.html?slug=${c.slug}" class="card-flat" style="display:block;">
       <strong>${c.name}</strong>
       <p class="text-sm mb-0">${c.short_description}</p>
-    </a>`).join('') || '<p class="text-sm text-faint">Belum ada karier terkait di kategori yang sama.</p>';
+    </a>`).join('') || '<p class="text-sm text-faint">No related careers in the same category yet.</p>';
 }

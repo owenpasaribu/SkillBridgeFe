@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daftar — SkillBridge</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#F3EADB">
+<title>Sign Up — SkillBridge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/base.css">
@@ -20,35 +22,35 @@
   <div class="auth-card">
     <div class="auth-head">
       <a href="index.html" class="brand" style="justify-content:center;">
-        <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#E3A73B" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#171B2E" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#D9963F" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#2E271E" stroke-width="2.5" stroke-linecap="round"/></svg>
         SkillBridge
       </a>
-      <h2 style="margin-top:16px;">Buat akun barumu</h2>
-      <p class="text-sm">Butuh kurang dari 2 menit.</p>
+      <h2 style="margin-top:16px;">Create your new account</h2>
+      <p class="text-sm">Takes less than 2 minutes.</p>
     </div>
 
     <div class="card">
       <form id="registerForm">
         <div class="field">
-          <label for="fullName">Nama Lengkap</label>
-          <input type="text" id="fullName" required placeholder="Nama kamu">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" required placeholder="Your name">
         </div>
         <div class="field">
           <label for="email">Email</label>
-          <input type="email" id="email" required placeholder="nama@kampus.ac.id">
+          <input type="email" id="email" required placeholder="name@university.edu">
         </div>
         <div class="field">
           <label for="password">Password</label>
-          <input type="password" id="password" required minlength="6" placeholder="Minimal 6 karakter">
+          <input type="password" id="password" required minlength="6" placeholder="At least 6 characters">
         </div>
         <div class="field">
-          <label for="university">Universitas</label>
-          <input type="text" id="university" required placeholder="Nama universitas">
+          <label for="university">University</label>
+          <input type="text" id="university" required placeholder="University name">
         </div>
         <div class="field-row">
           <div class="field">
-            <label for="major">Jurusan</label>
-            <input type="text" id="major" required placeholder="Contoh: Teknik Informatika">
+            <label for="major">Major</label>
+            <input type="text" id="major" required placeholder="Example: Computer Science">
           </div>
           <div class="field">
             <label for="semester">Semester</label>
@@ -56,14 +58,14 @@
           </div>
         </div>
         <div class="field">
-          <label for="graduationYear">Perkiraan Tahun Lulus</label>
+          <label for="graduationYear">Expected Graduation Year</label>
           <input type="number" id="graduationYear" min="2024" max="2035" required placeholder="2027">
         </div>
-        <button type="submit" class="btn btn-primary btn-block">Buat Akun &amp; Lanjut Onboarding</button>
+        <button type="submit" class="btn btn-primary btn-block">Create Account &amp; Continue to Onboarding</button>
       </form>
     </div>
 
-    <p class="auth-foot text-soft">Sudah punya akun? <a href="login.html">Masuk di sini</a></p>
+    <p class="auth-foot text-soft">Already have an account? <a href="login.html">Sign in here</a></p>
   </div>
 </div>
 
@@ -72,6 +74,7 @@
 <script src="js/storage.js"></script>
 <script src="js/scoring.js"></script>
 <script src="js/api-mock.js"></script>
+<script src="js/api-live.js"></script>
 <script src="js/api.js"></script>
 <script src="js/auth.js"></script>
 </body>

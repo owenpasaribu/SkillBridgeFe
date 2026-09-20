@@ -7,11 +7,11 @@
  */
 
 const RECOMMENDATION_BY_CATEGORY = {
-  'Technical Skills': 'Lengkapi dulu skill teknis yang masih di bawah 80% dari level yang dibutuhkan lewat Skill Assessment.',
-  'Portfolio': 'Bangun satu proyek end-to-end untuk meningkatkan portfolio readiness kamu.',
-  'Experience': 'Cari pengalaman magang atau kontribusi open source untuk memperkuat bagian ini.',
-  'Career Documents': 'Siapkan CV dan website portofolio supaya mudah dibagikan ke recruiter.',
-  'Certifications': 'Tambahkan sertifikat yang relevan dengan target karier kamu di bagian atas.',
+  'Technical Skills': 'First improve the technical skills that are still below 80% of the required level, using Skill Assessment.',
+  'Portfolio': 'Build one end-to-end project to raise your portfolio readiness.',
+  'Experience': 'Look for an internship or open source contribution to strengthen this area.',
+  'Career Documents': 'Prepare a CV and portfolio website so they are easy to share with recruiters.',
+  'Certifications': 'Add certificates relevant to your target career in the section above.',
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -35,7 +35,7 @@ async function render() {
   const weakest = [...result.groups].sort((a, b) => a.percent - b.percent)[0];
   document.getElementById('recommendation').textContent = weakest
     ? RECOMMENDATION_BY_CATEGORY[weakest.category]
-    : 'Kesiapan portofolio kamu sudah cukup merata di semua kategori.';
+    : 'Your portfolio readiness is fairly even across all categories.';
 
   const area = document.getElementById('categoriesArea');
   area.innerHTML = result.groups.map(group => {
@@ -44,14 +44,14 @@ async function render() {
 
     let bodyHtml;
     if (isCertifications) {
-      bodyHtml = `<p class="text-sm text-faint mb-0">${group.items.length} sertifikat ditambahkan — kelola di bagian "Sertifikat" di atas.</p>`;
+      bodyHtml = `<p class="text-sm text-faint mb-0">${group.items.length} certificate(s) added — manage them in the "Certificates" section above.</p>`;
     } else {
       const itemsHtml = group.items.map(item => `
         <li class="${item.done ? 'is-done' : ''}">
           ${isTechnical
             ? `<span>${item.done ? '✓' : '✗'}</span><span>${item.label}</span>`
             : `<input type="checkbox" data-item="${item.id}" ${item.done ? 'checked' : ''}><span>${item.label}</span>`}
-        </li>`).join('') || '<li><span class="text-faint">Belum ada target karier untuk menghitung ini.</span></li>';
+        </li>`).join('') || '<li><span class="text-faint">No target career yet to calculate this.</span></li>';
       bodyHtml = `<ul class="checklist">${itemsHtml}</ul>`;
     }
 
@@ -81,12 +81,12 @@ async function analyzeGithub() {
   const btn = document.getElementById('analyzeGithubBtn');
 
   if (!username) {
-    resultBox.innerHTML = '<div class="github-result is-error">Masukkan username GitHub dulu.</div>';
+    resultBox.innerHTML = '<div class="github-result is-error">Please enter a GitHub username first.</div>';
     return;
   }
 
   btn.disabled = true;
-  btn.textContent = 'Menganalisis...';
+  btn.textContent = 'Analyzing...';
   resultBox.innerHTML = '';
 
   const res = await Api.portfolio.analyzeGithub(username);
@@ -94,25 +94,25 @@ async function analyzeGithub() {
   if (res.status !== 200) {
     resultBox.innerHTML = `<div class="github-result is-error">${res.message}</div>`;
     btn.disabled = false;
-    btn.textContent = 'Analisis GitHub';
+    btn.textContent = 'Analyze GitHub';
     return;
   }
 
   const { repos_analyzed, languages, boosted_skills } = res.data;
   const langTags = languages.map(l => `<span class="badge badge-neutral">${l.name} (${l.repo_count} repo)</span>`).join('');
   const boostText = boosted_skills.length
-    ? `<p class="text-sm" style="margin-top:10px;"><strong>Level yang disesuaikan:</strong></p><ul class="text-sm">${boosted_skills.map(b => `<li>${b.skill_name}: ${b.from}% &rarr; ${b.to}%</li>`).join('')}</ul>`
-    : '<p class="text-sm" style="margin-top:10px;">Tidak ada level skill yang perlu dinaikkan — hasil self-assessment kamu sudah sejalan atau lebih tinggi dari aktivitas GitHub.</p>';
+    ? `<p class="text-sm" style="margin-top:10px;"><strong>Adjusted levels:</strong></p><ul class="text-sm">${boosted_skills.map(b => `<li>${b.skill_name}: ${b.from}% &rarr; ${b.to}%</li>`).join('')}</ul>`
+    : '<p class="text-sm" style="margin-top:10px;">This analysis has not adjusted any skill levels.</p>';
 
   resultBox.innerHTML = `
     <div class="github-result">
-      <strong>${repos_analyzed} repository publik dianalisis</strong> untuk @${username}.
-      <div class="lang-tag-row">${langTags || '<span class="text-faint text-sm">Tidak ada bahasa terdeteksi.</span>'}</div>
+      <strong>${repos_analyzed} public repositories analyzed</strong> for @${username}.
+      <div class="lang-tag-row">${langTags || '<span class="text-faint text-sm">No languages detected.</span>'}</div>
       ${boostText}
     </div>`;
 
   btn.disabled = false;
-  btn.textContent = 'Analisis GitHub';
+  btn.textContent = 'Analyze GitHub';
   render();
 }
 
@@ -124,13 +124,13 @@ async function renderCertList() {
   const certs = res.data;
 
   if (certs.length === 0) {
-    list.innerHTML = '<li><span class="text-faint">Belum ada sertifikat ditambahkan.</span></li>';
+    list.innerHTML = '<li><span class="text-faint">No certificates added yet.</span></li>';
     return;
   }
   list.innerHTML = certs.map(c => `
     <li>
       <span>${c.title} — <span class="text-faint">${c.issuer}${c.year ? `, ${c.year}` : ''}</span></span>
-      <button class="btn btn-ghost btn-sm" data-remove-cert="${c.id}">Hapus</button>
+      <button class="btn btn-ghost btn-sm" data-remove-cert="${c.id}">Delete</button>
     </li>`).join('');
 
   list.querySelectorAll('[data-remove-cert]').forEach(btn => {
@@ -143,8 +143,8 @@ async function addCertificate() {
   const issuer = document.getElementById('certIssuer').value.trim();
   const year = document.getElementById('certYear').value.trim();
 
-  if (!title || !issuer) {
-    alert('Nama sertifikat dan penerbit wajib diisi.');
+  if (!title || !issuer || !year) {
+    alert('Certificate name, issuer, and year are required.');
     return;
   }
 

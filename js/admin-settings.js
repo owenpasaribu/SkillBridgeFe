@@ -25,6 +25,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateTotal();
   });
   document.getElementById('resetAllBtn').addEventListener('click', resetAll);
+  // "Reset Semua Data Admin" hanya mereset data mock di localStorage; di mode live
+  // data ada di database backend, jadi tombolnya disembunyikan.
+  if (typeof isLiveMode === 'function' && isLiveMode()) {
+    const resetAllBtn = document.getElementById('resetAllBtn');
+    const resetBlock = resetAllBtn.closest('.card') || resetAllBtn;
+    resetBlock.style.display = 'none';
+  }
 });
 
 function fillForm(weights) {
@@ -40,14 +47,14 @@ function currentTotal() {
 function updateTotal() {
   const total = currentTotal();
   const box = document.getElementById('weightTotal');
-  box.textContent = `Total saat ini: ${total}%`;
+  box.textContent = `Current total: ${total}%`;
   box.className = `weight-total ${total === 100 ? 'is-ok' : 'is-off'}`;
 }
 
 async function saveWeights() {
   const total = currentTotal();
   if (total !== 100) {
-    alert('Total bobot harus tepat 100% sebelum disimpan.');
+    alert('The weights must add up to exactly 100% before saving.');
     return;
   }
   const body = {};
@@ -66,7 +73,7 @@ async function saveInsightMode() {
 }
 
 function resetAll() {
-  if (!confirm('Reset semua data yang dikelola admin (career, skill, industry data, learning resource, bobot skor) ke kondisi awal?')) return;
+  if (!confirm('Reset all admin-managed data (careers, skills, industry data, learning resources, score weights) to the defaults?')) return;
   // Catatan: ini utilitas khusus mock/demo untuk reset localStorage —
   // tidak ada endpoint "reset semua data" di dokumen kontrak BE.
   const fresh = resetAdminContent();

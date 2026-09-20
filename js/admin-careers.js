@@ -11,7 +11,7 @@
  * di sistem ini, jadi aman dipakai.
  */
 
-const IMPORTANCE_OPTIONS = ['low', 'medium', 'high', 'critical'];
+const IMPORTANCE_OPTIONS = ['optional', 'low', 'medium', 'important', 'high', 'critical'];
 
 let editingCareerId = null;
 let skillReqDraft = [];
@@ -48,7 +48,7 @@ function renderTable(careers) {
       <td>${c.required_skills_count} skill</td>
       <td class="action-cell">
         <button class="btn btn-ghost btn-sm" data-edit="${c.id}">Edit</button>
-        <button class="btn btn-danger btn-sm" data-delete="${c.id}">Hapus</button>
+        <button class="btn btn-danger btn-sm" data-delete="${c.id}">Delete</button>
       </td>
     </tr>`).join('');
 
@@ -67,7 +67,7 @@ async function openFormById(id) {
 
 function openForm(career) {
   editingCareerId = career ? career.id : null;
-  document.getElementById('formTitle').textContent = career ? `Edit — ${career.name}` : 'Tambah Career';
+  document.getElementById('formTitle').textContent = career ? `Edit — ${career.name}` : 'Add Career';
 
   document.getElementById('f-name').value = career ? career.name : '';
   document.getElementById('f-category').value = career ? career.category : '';
@@ -100,7 +100,7 @@ function renderSkillReqRows() {
   const area = document.getElementById('skillReqArea');
 
   if (skillReqDraft.length === 0) {
-    area.innerHTML = '<p class="text-sm text-faint">Belum ada skill requirement. Tambahkan minimal satu.</p>';
+    area.innerHTML = '<p class="text-sm text-faint">No skill requirements yet. Add at least one.</p>';
     return;
   }
 
@@ -113,7 +113,7 @@ function renderSkillReqRows() {
       <select data-field="importance" data-index="${i}">
         ${IMPORTANCE_OPTIONS.map(imp => `<option value="${imp}" ${imp === req.importance ? 'selected' : ''}>${imp}</option>`).join('')}
       </select>
-      <button type="button" class="icon-btn" data-remove="${i}" title="Hapus baris ini">✕</button>
+      <button type="button" class="icon-btn" data-remove="${i}" title="Remove this row">✕</button>
     </div>`).join('');
 
   area.querySelectorAll('[data-field]').forEach(input => {
@@ -139,8 +139,8 @@ function addSkillReqRow() {
 
 async function saveCareer() {
   const name = document.getElementById('f-name').value.trim();
-  if (!name) { alert('Nama career wajib diisi.'); return; }
-  if (skillReqDraft.length === 0) { alert('Tambahkan minimal satu skill requirement.'); return; }
+  if (!name) { alert('Career name is required.'); return; }
+  if (skillReqDraft.length === 0) { alert('Add at least one skill requirement.'); return; }
 
   const responsibilities = document.getElementById('f-resp').value.split('\n').map(s => s.trim()).filter(Boolean);
   const tools = document.getElementById('f-tools').value.split(',').map(s => s.trim()).filter(Boolean);
@@ -170,7 +170,7 @@ async function saveCareer() {
 }
 
 async function deleteCareer(id) {
-  if (!confirm('Hapus career ini? Skill gap dan roadmap student yang menargetkan career ini akan kosong sampai mereka memilih target baru.')) return;
+  if (!confirm('Delete this career? Skill gap and roadmap views for students targeting it will be empty until they choose a new target.')) return;
   await Api.admin.careers.remove(id);
   reloadTable();
 }

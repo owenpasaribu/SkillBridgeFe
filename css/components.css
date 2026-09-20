@@ -137,7 +137,7 @@
 .badge-critical { background: var(--color-critical-soft); color: var(--color-critical); }
 .badge-neutral { background: var(--color-surface-alt); color: var(--color-ink-soft); }
 .badge-primary { background: var(--color-primary-soft); color: var(--color-primary); }
-.badge-demo { background: #fff; border: 1px dashed var(--color-ink-faint); color: var(--color-ink-faint); }
+.badge-demo { background: var(--color-surface); border: 1px dashed var(--color-ink-faint); color: var(--color-ink-faint); }
 
 /* ---- Progress bars ---- */
 .progress-track {
@@ -404,6 +404,169 @@ table.data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; ba
 .cert-list li:last-child { border-bottom: none; }
 .cert-add-row { display: grid; grid-template-columns: 2fr 1.3fr 90px auto; gap: 10px; }
 @media (max-width: 700px) { .cert-add-row { grid-template-columns: 1fr 1fr; } }
+/* ---- Filter bar (Career Explorer, Industry Insights, tabel admin) ---- */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  margin-bottom: 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.filter-search { position: relative; flex: 1 1 260px; min-width: 220px; }
+.filter-search svg {
+  position: absolute; left: 14px; top: 50%;
+  width: 18px; height: 18px;
+  transform: translateY(-50%);
+  color: var(--color-ink-faint);
+  pointer-events: none;
+}
+
+.filter-search input,
+.select-modern {
+  height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+.filter-search input { width: 100%; padding: 0 14px 0 42px; }
+.filter-search input::placeholder { color: var(--color-ink-faint); }
+
+/* <select> dengan panah sendiri (bukan panah bawaan browser) */
+.select-modern {
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 170px;
+  padding: 0 42px 0 16px;
+  font-weight: 500;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235F5646' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+}
+.filter-search input:hover,
+.select-modern:hover { border-color: var(--color-ink-faint); }
+.filter-search input:focus,
+.select-modern:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background-color: var(--color-surface);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+/* Toggle on/off (menggantikan checkbox polos) */
+.filter-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 18px 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-bg);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.filter-toggle:hover { border-color: var(--color-ink-faint); }
+.filter-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0; height: 0;
+}
+.filter-toggle .switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 36px; height: 20px;
+  border-radius: 999px;
+  background: var(--color-border);
+  transition: background-color 0.15s ease;
+}
+.filter-toggle .switch::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  box-shadow: 0 1px 2px rgba(46,39,30,0.3);
+  transition: transform 0.15s ease;
+}
+.filter-toggle input:checked + .switch { background: var(--color-primary); }
+.filter-toggle input:checked + .switch::after { transform: translateX(16px); }
+.filter-toggle input:focus-visible + .switch { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.filter-toggle:has(input:checked) { background: var(--color-primary-soft); border-color: var(--color-primary); }
+
+@media (max-width: 620px) {
+  .filter-bar { padding: 12px; }
+  .filter-bar > * { flex: 1 1 100%; }
+  .select-modern { width: 100%; }
+}
+
+/* Deretan badge di bawah judul kartu; hilang otomatis kalau kosong */
+.badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.badge-row:empty { display: none; }
+
+/* ---- Loading bar & toast (js/api.js) ---- */
+.api-loader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent 0%, var(--color-primary) 40%, var(--color-accent) 60%, transparent 100%);
+  background-size: 200% 100%;
+  transition: opacity 0.2s ease;
+}
+.api-loader.is-active { opacity: 1; animation: api-loader-slide 1.1s linear infinite; }
+@keyframes api-loader-slide { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+.sb-toast {
+  position: fixed;
+  left: 50%; bottom: 24px;
+  z-index: 100;
+  display: flex; align-items: center; gap: 12px;
+  max-width: min(560px, calc(100vw - 32px));
+  padding: 12px 14px 12px 18px;
+  border-radius: var(--radius-md);
+  background: var(--color-ink);
+  color: var(--color-surface);
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  transform: translate(-50%, 12px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.sb-toast.is-visible { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.sb-toast button {
+  border: 1px solid rgba(251,247,239,0.4);
+  background: transparent;
+  color: var(--color-surface);
+  border-radius: var(--radius-sm);
+  padding: 4px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.sb-toast button:hover { background: rgba(251,247,239,0.12); }
+.sb-toast .sb-toast-close { border: none; padding: 2px 8px; font-size: 1.2rem; line-height: 1; }
+
+/* Pengganti sparkline kalau data tren belum cukup */
+.sparkline-empty { display: inline-block; width: 70px; text-align: center; font-size: 0.7rem; color: var(--color-ink-faint); }
+
 /* ---- Utility ---- */
 .mt-0 { margin-top: 0; }
 .mb-0 { margin-bottom: 0; }

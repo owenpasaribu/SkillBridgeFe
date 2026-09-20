@@ -4,30 +4,31 @@
    ========================================================================== */
 
 :root {
-  /* Colors */
-  --color-bg: #F4F5FA;
-  --color-surface: #FFFFFF;
-  --color-surface-alt: #EDEFF7;
-  --color-ink: #171B2E;
-  --color-ink-soft: #565B72;
-  --color-ink-faint: #8A8FA3;
-  --color-border: #E1E3EF;
+  /* Colors — earth tone: pasir (dasar), krem (kartu), umber (teks),
+     hijau zaitun (aksi utama), oker/terakota (aksen). */
+  --color-bg: #F3EADB;
+  --color-surface: #FBF7EF;
+  --color-surface-alt: #EBE0CC;
+  --color-ink: #2E271E;
+  --color-ink-soft: #5F5646;
+  --color-ink-faint: #6F644D;
+  --color-border: #DCCFB6;
 
-  --color-primary: #37409C;
-  --color-primary-dark: #262C6E;
-  --color-primary-soft: #E8E9F7;
+  --color-primary: #55662E;
+  --color-primary-dark: #3F4E20;
+  --color-primary-soft: #E3E7CB;
 
-  --color-accent: #E3A73B;
-  --color-accent-soft: #FBF0DA;
+  --color-accent: #D9963F;
+  --color-accent-soft: #F6E4C8;
 
-  --color-success: #2F9E6B;
-  --color-success-soft: #E3F5EC;
+  --color-success: #2E7148;
+  --color-success-soft: #DDEBD9;
 
-  --color-warning: #D9822B;
-  --color-warning-soft: #FBEADB;
+  --color-warning: #9A5A0C;
+  --color-warning-soft: #F6E3BF;
 
-  --color-critical: #C1483D;
-  --color-critical-soft: #F8E3E1;
+  --color-critical: #9C3529;
+  --color-critical-soft: #F3DAD4;
 
   /* Type */
   --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
@@ -37,7 +38,7 @@
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 20px;
-  --shadow-card: 0 1px 2px rgba(23,27,46,0.05), 0 10px 26px -14px rgba(23,27,46,0.16);
+  --shadow-card: 0 1px 2px rgba(46,39,30,0.06), 0 10px 26px -14px rgba(46,39,30,0.20);
 
   --container-width: 1160px;
 }

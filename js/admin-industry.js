@@ -10,7 +10,7 @@
 let editingInsightSkillId = null;
 let skillsCache = [];
 
-const TREND_LABEL = { up: 'Naik', down: 'Turun', stable: 'Stabil' };
+const TREND_LABEL = { up: 'Rising', down: 'Falling', stable: 'Stable' };
 
 document.addEventListener('DOMContentLoaded', async () => {
   const insightsRes = await Api.admin.industryInsights.list();
@@ -41,7 +41,7 @@ function renderTable(insights) {
       <td><span class="badge ${i.trend === 'up' ? 'badge-success' : i.trend === 'down' ? 'badge-critical' : 'badge-neutral'}">${TREND_LABEL[i.trend]}</span></td>
       <td class="action-cell">
         <button class="btn btn-ghost btn-sm" data-edit="${i.skill_id}">Edit</button>
-        <button class="btn btn-danger btn-sm" data-delete="${i.skill_id}">Hapus</button>
+        <button class="btn btn-danger btn-sm" data-delete="${i.skill_id}">Delete</button>
       </td>
     </tr>`).join('');
 
@@ -55,7 +55,7 @@ function renderTable(insights) {
 
 function openForm(insight) {
   editingInsightSkillId = insight ? insight.skill_id : null;
-  document.getElementById('formTitle').textContent = insight ? `Edit — ${insight.skill_name}` : 'Tambah Data Skill';
+  document.getElementById('formTitle').textContent = insight ? `Edit — ${insight.skill_name}` : 'Add Skill Data';
 
   const skillSelect = document.getElementById('f-skill');
   skillSelect.innerHTML = skillsCache.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
@@ -65,7 +65,7 @@ function openForm(insight) {
   document.getElementById('f-demand').value = insight ? insight.demand : 50;
   document.getElementById('f-trend').value = insight ? insight.trend : 'stable';
   document.getElementById('f-samplesize').value = insight ? (insight.job_sample_size ?? 200) : 200;
-  document.getElementById('f-period').value = insight ? (insight.period || '3 bulan terakhir') : '3 bulan terakhir';
+  document.getElementById('f-period').value = insight ? (insight.period || 'Last 3 months') : 'Last 3 months';
 
   const panel = document.getElementById('formPanel');
   panel.classList.add('is-open');
@@ -84,7 +84,7 @@ async function saveInsight() {
     demand: Number(document.getElementById('f-demand').value) || 0,
     trend: document.getElementById('f-trend').value,
     job_sample_size: Number(document.getElementById('f-samplesize').value) || 0,
-    period: document.getElementById('f-period').value.trim() || '3 bulan terakhir',
+    period: document.getElementById('f-period').value.trim() || 'Last 3 months',
   };
 
   const res = await Api.admin.industryInsights.save(body);
@@ -94,7 +94,8 @@ async function saveInsight() {
 }
 
 async function deleteInsight(skillId) {
-  if (!confirm('Hapus data demand untuk skill ini?')) return;
-  await Api.admin.industryInsights.remove(skillId);
+  if (!confirm('Delete the demand data for this skill?')) return;
+  const res = await Api.admin.industryInsights.remove(skillId);
+  if (res.status !== 200) { alert(res.message); return; }
   reloadTable();
 }

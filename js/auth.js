@@ -8,6 +8,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('loginForm');
   if (loginForm) loginForm.addEventListener('submit', handleLogin);
 
+  // Akun demo hanya ada di mode mock (data di localStorage). Di mode live
+  // login harus lewat akun asli di backend, jadi tombol demo disembunyikan.
+  if (typeof isLiveMode === 'function' && isLiveMode()) {
+    ['demoBtn', 'demoAdminBtn'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    const divider = document.querySelector('.divider');
+    if (divider) divider.style.display = 'none';
+    const note = document.querySelector('#loginForm ~ .field-hint');
+    if (note) note.textContent = 'This one login form works for both students and admins — you are routed automatically based on your account.';
+  }
+
   const demoBtn = document.getElementById('demoBtn');
   if (demoBtn) demoBtn.addEventListener('click', () => {
     seedDemoState();
@@ -38,7 +51,7 @@ async function handleLogin(e) {
   const res = await Api.auth.login(email, password);
 
   if (res.status !== 200) {
-    showLoginError(res.message || 'Email atau password salah.');
+    showLoginError(res.message || 'Incorrect email or password.');
     return;
   }
 
@@ -66,7 +79,7 @@ async function handleRegister(e) {
   const res = await Api.auth.register(body);
 
   if (res.status !== 201) {
-    alert(res.message || 'Registrasi gagal. Coba lagi.');
+    alert(res.message || 'Registration failed. Please try again.');
     return;
   }
 

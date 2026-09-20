@@ -75,6 +75,7 @@ skillbridge/
     ├── scoring.js                 Logika Career Readiness Score, Skill Gap, generator Roadmap
     ├── api.js                      API client — satu-satunya file yang dipanggil halaman lain
     ├── api-mock.js                  "Backend palsu" — implementasi mock persis kontrak API
+    ├── api-live.js                  Adapter ke backend Laravel asli (mode live)
     ├── main.js                     Util bersama (sidebar mobile, nav aktif, logout student & admin)
     ├── auth.js, onboarding.js, dashboard.js, career-explorer.js,
     │   career-detail.js, assessment.js, skill-gap.js, roadmap.js,
@@ -169,32 +170,56 @@ halaman admin (termasuk Settings).
   sumber data, sample size, dan periode — supaya tidak ada angka yang
   terkesan seperti data riil tanpa penjelasan.
 
-## Arsitektur API Client — siap integrasi ke Laravel BE
+## Arsitektur API Client — terhubung ke Laravel BE
 
-Sejak dokumen `SkillBridge.pdf` (API Contract dari tim Backend) dibuat,
-seluruh halaman di FE ini **sudah tidak mengakses localStorage secara
-langsung**. Semua data lewat satu lapisan:
+Seluruh halaman FE **tidak mengakses localStorage/backend secara langsung**.
+Semua data lewat satu lapisan:
 
 ```
 Halaman (dashboard.js, admin-careers.js, dst)
-        │  memanggil
+        │  memanggil Api.xxx.yyy()
         ▼
-   js/api.js   ← satu-satunya file yang halaman lain kenal
-        │  saat ini diarahkan ke:
-        ▼
- js/api-mock.js  ← "backend palsu", isinya localStorage,
-                    tapi request/response-nya identik dengan
-                    API Contract (snake_case, amplop
-                    {status,message,data}, dst)
+   js/api.js            ← satu-satunya file yang halaman lain kenal
+        │
+        ├─ API_MODE = 'live' (default) ─► js/api-live.js ─► Backend Laravel (/api/v1)
+        │                                  (adapter: menyeragamkan amplop respons,
+        │                                   menerjemahkan id angka <-> slug/kode skill,
+        │                                   dan menyesuaikan bentuk data BE ke bentuk FE)
+        │
+        └─ API_MODE = 'mock'         ─► js/api-mock.js ─► "backend palsu" di localStorage
 ```
 
-### Cara pindah ke backend Laravel asli
+### Menjalankan FE + BE
 
-1. Buka `js/api.js`, ubah `const API_MODE = 'mock';` jadi `'live'`.
-2. Isi `API_BASE_URL` sesuai domain backend.
-3. Selesai. **Tidak ada satupun halaman lain yang perlu diubah** —
-   semua manggil lewat `Api.xxx.yyy()`, bukan `js/api-mock.js` langsung.
-4. `js/api-mock.js` boleh dihapus setelah itu (sudah tidak dipakai).
+1. Backend sudah ada di Railway: `https://skillbridge-production-f8ed.up.railway.app`
+   (dokumentasi di `/docs`). Untuk backend lokal: `php artisan migrate --seed` lalu
+   `php artisan serve` (`http://localhost:8000`).
+2. Buka `js/api.js`, pastikan `API_MODE = 'live'` dan `API_BASE_URL` **lengkap**
+   (awalan `https://` dan akhiran `/api/v1`), mis.
+   `https://skillbridge-production-f8ed.up.railway.app/api/v1` (Railway) atau
+   `http://localhost:8000/api/v1` (lokal).
+3. Jalankan FE lewat local server (bukan double-click `index.html`), mis.
+   `npx serve .`. Backend sudah mengizinkan semua origin (`config/cors.php`).
+4. Daftar akun student lewat halaman Register. Akun admin harus dibuat di
+   database backend (kolom `role = 'admin'`) — tidak ada seeder admin di BE saat ini.
+
+Mau demo tanpa backend? Ubah `API_MODE` jadi `'mock'` — tombol akun demo di
+halaman login akan bekerja lagi seperti prototype awal.
+
+### Bahasa & halaman tambahan
+
+Antarmuka berbahasa Inggris. Ada halaman admin **Data Pipeline** (`admin-scrape-runs.html`),
+halaman `404.html` (otomatis dipakai GitHub Pages/Netlify/Vercel), dan `favicon.svg`.
+Komentar di dalam kode masih berbahasa Indonesia.
+
+### Kenapa ada `js/api-live.js`
+
+Bentuk respons BE yang sebenarnya beda dari yang diasumsikan prototype
+(mis. `GET /me` dibungkus `data.user`, checklist portfolio berupa daftar datar,
+sertifikat ada di `/portfolio/certificates`, id career/skill berupa angka).
+Semua penyesuaian itu dikumpulkan di satu file supaya halaman-halaman tidak
+perlu tahu detail BE. Daftar endpoint yang belum ada / berbeda di BE ada di
+`ENDPOINT_TRACKER.md`.
 
 ### Endpoint usulan — belum ada di dokumen kontrak
 

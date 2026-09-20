@@ -13,12 +13,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 function renderTable(users) {
   const tbody = document.getElementById('userTableBody');
   if (users.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="3"><p class="empty-state">Belum ada user terdaftar.</p></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="3"><p class="empty-state">No registered users yet.</p></td></tr>';
     return;
   }
   tbody.innerHTML = users.map(u => `
     <tr>
-      <td><strong>${u.full_name || '(tanpa nama)'}</strong></td>
+      <td><strong>${u.full_name || '(no name)'}</strong></td>
       <td>${u.target_career || '-'}</td>
       <td>${u.readiness_score !== null ? `${u.readiness_score}%` : '<span class="text-faint">-</span>'}</td>
     </tr>`).join('');

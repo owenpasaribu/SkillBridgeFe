@@ -43,7 +43,7 @@ function getState() {
     if (parsed.githubUsername === undefined) parsed.githubUsername = null;
     return parsed;
   } catch (err) {
-    console.warn('SkillBridge: state korup, direset.', err);
+    console.warn('SkillBridge: state was corrupted and has been reset.', err);
     return null;
   }
 }
@@ -65,8 +65,8 @@ function seedDemoState() {
   state.profile = {
     fullName: 'Alex Pratama',
     email: 'alex.pratama@example.com',
-    university: 'Universitas Contoh',
-    major: 'Teknik Informatika',
+    university: 'Sample University',
+    major: 'Computer Science',
     semester: '6',
     graduationYear: '2027',
     targetCareerId: 'data-engineer',

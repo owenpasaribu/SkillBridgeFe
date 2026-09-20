@@ -5,20 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="theme-color" content="#F3EADB">
-<title>Admin Dashboard — SkillBridge</title>
+<title>Data Pipeline — SkillBridge Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/components.css">
 <style>
-  .stat-grid { display:grid; grid-template-columns: repeat(4,1fr); gap:16px; margin-bottom:20px; }
-  @media (max-width:960px){ .stat-grid{ grid-template-columns: repeat(2,1fr); } }
-  @media (max-width:560px){ .stat-grid{ grid-template-columns: 1fr; } }
-  .stat-card .num { font-family: var(--font-display); font-size:1.8rem; font-weight:700; color: var(--color-primary); }
-  .quicklink-grid { display:grid; grid-template-columns: repeat(3,1fr); gap:16px; }
-  @media (max-width:860px){ .quicklink-grid{ grid-template-columns:1fr 1fr; } }
-  @media (max-width:560px){ .quicklink-grid{ grid-template-columns:1fr; } }
-  .quicklink-card { display:block; }
+  .action-cell { display:flex; gap:8px; }
 </style>
 </head>
 <body>
@@ -51,37 +44,22 @@
       <span style="width:22px;"></span>
     </div>
     <div class="app-content">
-      <h2 style="margin-bottom:4px;">Admin Dashboard</h2>
-      <p class="text-soft">Platform activity summary. <span class="badge badge-demo info-badge" data-mock-only tabindex="0" data-tooltip="Roadmap Completion and Assessment Completion use simulated figures. Total/Active Users and Most Selected Careers are calculated from the available user data.">Some figures are Demo Data ⓘ</span></p>
-
-      <div class="stat-grid">
-        <div class="card stat-card"><p class="text-sm text-faint mb-0">Total Users</p><div class="num" id="statTotalUsers">0</div></div>
-        <div class="card stat-card"><p class="text-sm text-faint mb-0">Active Users</p><div class="num" id="statActiveUsers">0</div></div>
-        <div class="card stat-card"><p class="text-sm text-faint mb-0">Roadmap Completion</p><div class="num" id="statRoadmapCompletion">0%</div></div>
-        <div class="card stat-card"><p class="text-sm text-faint mb-0">Assessment Completion</p><div class="num" id="statAssessmentCompletion">0%</div></div>
-      </div>
-
-      <div class="grid-2" style="margin-bottom:24px;">
-        <div class="card">
-          <h3>Most Selected Careers</h3>
-          <div id="topCareersList"></div>
+      <div class="flex-between" style="align-items:flex-start; margin-bottom:8px; flex-wrap:wrap;">
+        <div>
+          <h2 style="margin-bottom:4px;">Data Pipeline</h2>
+          <p class="text-soft">History of the job-posting scraping runs that feed Industry Insights (scraper → ML skill extraction → aggregation).</p>
         </div>
-        <div class="card">
-          <h3>Most Common Skill Gaps</h3>
-          <p class="text-sm text-faint">Based on submitted skill assessments. <span class="badge badge-demo info-badge" data-mock-only tabindex="0" data-tooltip="This skill gap list is simulated for the prototype and is not yet aggregated from real assessments across users.">Demo Data ⓘ</span></p>
-          <div id="commonGapsList"></div>
-        </div>
+        <button type="button" class="btn btn-primary" id="runScrapeBtn">Run scraping now</button>
       </div>
+      <p class="text-sm" id="runNote" hidden style="margin:0 0 16px; color:var(--color-primary); font-weight:600;"></p>
 
-      <h3 style="margin-bottom:16px;">Manage Data</h3>
-      <div class="quicklink-grid">
-        <a href="admin-careers.html" class="card quicklink-card"><strong>Career Management</strong><p class="text-sm mb-0">Add, edit, and delete careers and skill requirements.</p></a>
-        <a href="admin-skills.html" class="card quicklink-card"><strong>Skill Management</strong><p class="text-sm mb-0">Manage the list of technical and soft skills.</p></a>
-        <a href="admin-industry-insights.html" class="card quicklink-card"><strong>Industry Data</strong><p class="text-sm mb-0">Update industry skill demand figures.</p></a>
-        <a href="admin-learning-resources.html" class="card quicklink-card"><strong>Learning Resources</strong><p class="text-sm mb-0">Manage learning resources per skill for the roadmap.</p></a>
-        <a href="admin-users.html" class="card quicklink-card"><strong>User Management</strong><p class="text-sm mb-0">View the list of registered students.</p></a>
-        <a href="admin-analytics.html" class="card quicklink-card"><strong>Analytics</strong><p class="text-sm mb-0">More detailed platform usage statistics.</p></a>
-        <a href="admin-scrape-runs.html" class="card quicklink-card"><strong>Data Pipeline</strong><p class="text-sm mb-0">Review scraping runs and start a new one.</p></a>
+      <div class="grid-3" style="margin:16px 0 20px;" id="pipelineSummary"></div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Run</th><th>Started</th><th>Finished</th><th>Status</th><th>Jobs found</th><th>Jobs processed</th><th>Notes</th></tr></thead>
+          <tbody id="runTableBody"></tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -95,6 +73,6 @@
 <script src="js/api-live.js"></script>
 <script src="js/api.js"></script>
 <script src="js/main.js"></script>
-<script src="js/admin-dashboard.js"></script>
+<script src="js/admin-scrape-runs.js"></script>
 </body>
 </html>

@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#F3EADB">
 <title>Settings — SkillBridge Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,7 +23,7 @@
 <div class="app-shell">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#E3A73B" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#171B2E" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#D9963F" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#2E271E" stroke-width="2.5" stroke-linecap="round"/></svg>
       SkillBridge <span class="badge badge-primary" style="margin-left:2px;">Admin</span>
     </div>
     <ul class="sidebar-nav">
@@ -32,28 +34,29 @@
       <li><a href="admin-learning-resources.html"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" stroke-width="1.8"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="1.8"/></svg> Learning Resources</a></li>
       <li><a href="admin-users.html"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 20c1.3-3.6 3.6-5.4 6.5-5.4s5.2 1.8 6.5 5.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="18" cy="8.5" r="2.4" stroke="currentColor" stroke-width="1.8"/><path d="M16 15c2.4.2 4 1.7 5 4.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Users</a></li>
       <li><a href="admin-analytics.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l3 8 4-16 3 8h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Analytics</a></li>
+      <li><a href="admin-scrape-runs.html"><svg viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 11-2.3-5.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M20 4v4h-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Data Pipeline</a></li>
       <li><a href="admin-settings.html"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1h.1a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z" stroke="currentColor" stroke-width="1.5"/></svg> Settings</a></li>
     </ul>
     <div class="sidebar-footer">
-      <p class="text-sm text-faint" style="margin:0 0 10px;"><a href="index.html">&larr; Keluar dari Admin Mode</a></p>
-      <a href="#" data-action="logout-admin" class="btn btn-ghost btn-sm btn-block">Keluar</a>
+      <p class="text-sm text-faint" style="margin:0 0 10px;"><a href="index.html">&larr; Exit Admin Mode</a></p>
+      <a href="#" data-action="logout-admin" class="btn btn-ghost btn-sm btn-block">Sign out</a>
     </div>
   </aside>
   <div class="app-main">
     <div class="app-topbar">
-      <button data-action="toggle-sidebar" class="nav-toggle" style="display:inline-flex;" aria-label="Buka menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#171B2E" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <button data-action="toggle-sidebar" class="nav-toggle" style="display:inline-flex;" aria-label="Open menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#2E271E" stroke-width="2" stroke-linecap="round"/></svg></button>
       <span class="brand" style="font-size:1rem;">SkillBridge</span>
       <span style="width:22px;"></span>
     </div>
     <div class="app-content" style="max-width:640px;">
       <h2 style="margin-bottom:4px;">Settings</h2>
-      <p class="text-soft">Atur bobot formula Career Readiness Score — transparan dan bisa diubah, sesuai catatan di dokumen perencanaan awal.</p>
+      <p class="text-soft">Adjust the Career Readiness Score formula weights — transparent and editable, as noted in the original planning document.</p>
 
-      <div class="save-toast" id="saveToast">Bobot formula tersimpan.</div>
+      <div class="save-toast" id="saveToast">Formula weights saved.</div>
 
       <div class="card" style="margin-bottom:20px;">
-        <h3>Bobot Career Readiness Score</h3>
-        <p class="text-sm text-faint">Total kelima bobot harus 100%.</p>
+        <h3>Career Readiness Score Weights</h3>
+        <p class="text-sm text-faint">The five weights must total 100%.</p>
 
         <div class="weight-row"><label for="w-technical">Technical Skill Match</label><input type="number" id="w-technical" min="0" max="100"></div>
         <div class="weight-row"><label for="w-soft">Soft Skill Match</label><input type="number" id="w-soft" min="0" max="100"></div>
@@ -64,28 +67,28 @@
         <div class="weight-total" id="weightTotal"></div>
 
         <div class="flex-between" style="margin-top:20px;">
-          <button id="resetWeightsBtn" class="btn btn-ghost btn-sm">Kembalikan ke Default</button>
-          <button id="saveWeightsBtn" class="btn btn-primary">Simpan Bobot</button>
+          <button id="resetWeightsBtn" class="btn btn-ghost btn-sm">Reset to Default</button>
+          <button id="saveWeightsBtn" class="btn btn-primary">Save Weights</button>
         </div>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
         <h3>Mode Industry Insight</h3>
-        <p class="text-sm">Menentukan sumber data <code>industry_insights</code>: <strong>Manual</strong> (diisi admin sendiri, seperti saat ini) atau <strong>Auto</strong> (ditulis otomatis dari hasil scraping + ML setiap siklus scraping berjalan).</p>
+        <p class="text-sm">Determines the data source <code>industry_insights</code>: <strong>Manual</strong> (entered by an admin, as it is now) or <strong>Auto</strong> (written automatically from scraping + ML results each time a scraping cycle runs).</p>
         <div class="field" style="max-width:240px;">
           <label for="insightModeSelect">Mode</label>
           <select id="insightModeSelect">
             <option value="manual">Manual</option>
-            <option value="auto">Auto (dari scraping)</option>
+            <option value="auto">Auto (from scraping)</option>
           </select>
         </div>
-        <button id="saveModeBtn" class="btn btn-ghost btn-sm">Simpan Mode</button>
+        <button id="saveModeBtn" class="btn btn-ghost btn-sm">Save Mode</button>
       </div>
 
       <div class="card" style="border-color: var(--color-critical);">
-        <h3>Zona Berbahaya</h3>
-        <p class="text-sm">Mengembalikan seluruh data yang dikelola admin (career, skill, industry data, learning resource, bobot skor) ke kondisi awal. Data akun student tidak terpengaruh.</p>
-        <button id="resetAllBtn" class="btn btn-danger btn-sm">Reset Semua Data Admin</button>
+        <h3>Danger Zone</h3>
+        <p class="text-sm">Restores all admin-managed data (careers, skills, industry data, learning resources, score weights) to its defaults. Student account data is not affected.</p>
+        <button id="resetAllBtn" class="btn btn-danger btn-sm">Reset All Admin Data</button>
       </div>
     </div>
   </div>
@@ -96,6 +99,7 @@
 <script src="js/storage.js"></script>
 <script src="js/scoring.js"></script>
 <script src="js/api-mock.js"></script>
+<script src="js/api-live.js"></script>
 <script src="js/api.js"></script>
 <script src="js/main.js"></script>
 <script src="js/admin-settings.js"></script>

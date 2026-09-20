@@ -26,9 +26,9 @@ function fail(status, message, data = null) {
   return { status, message, data };
 }
 function unauthenticated() {
-  return fail(401, 'Unauthenticated. Silakan login ulang.');
+  return fail(401, 'Unauthenticated. Please sign in again.');
 }
-function notFound(message = 'Data tidak ditemukan') {
+function notFound(message = 'Data not found') {
   return fail(404, message, null);
 }
 
@@ -159,7 +159,7 @@ function mockRegister(body) {
   const token = `mock-token-${Date.now()}`;
   return ok(
     { user: { id: 1, full_name: state.profile.fullName, email: state.profile.email, role: 'student' }, token },
-    'Registrasi berhasil', 201
+    'Registration successful', 201
   );
 }
 
@@ -168,25 +168,25 @@ function mockLogin(body) {
 
   // Satu endpoint untuk dua role — deteksi dari email, sama seperti desain FE saat ini.
   if (email === ADMIN_ACCOUNT.email.toLowerCase()) {
-    if (body.password !== ADMIN_ACCOUNT.password) return fail(401, 'Email atau password salah.');
+    if (body.password !== ADMIN_ACCOUNT.password) return fail(401, 'Incorrect email or password.');
     loginAsAdmin();
-    return ok({ user: { id: 0, full_name: ADMIN_ACCOUNT.fullName, role: 'admin' }, token: `mock-admin-token-${Date.now()}` }, 'Login berhasil');
+    return ok({ user: { id: 0, full_name: ADMIN_ACCOUNT.fullName, role: 'admin' }, token: `mock-admin-token-${Date.now()}` }, 'Login successful');
   }
 
   const existing = getState();
-  if (!existing || !existing.profile.email) return fail(401, 'Email atau password salah.');
-  if (existing.profile.email.toLowerCase() !== email) return fail(401, 'Email atau password salah.');
+  if (!existing || !existing.profile.email) return fail(401, 'Incorrect email or password.');
+  if (existing.profile.email.toLowerCase() !== email) return fail(401, 'Incorrect email or password.');
 
   existing.auth.isLoggedIn = true;
   saveState(existing);
-  return ok({ user: { id: 1, full_name: existing.profile.fullName, role: 'student', onboarding_complete: existing.onboardingComplete }, token: `mock-token-${Date.now()}` }, 'Login berhasil');
+  return ok({ user: { id: 1, full_name: existing.profile.fullName, role: 'student', onboarding_complete: existing.onboardingComplete }, token: `mock-token-${Date.now()}` }, 'Login successful');
 }
 
 function mockLogout() {
-  if (isAdminLoggedIn()) { logoutAdmin(); return ok(null, 'Logout berhasil'); }
+  if (isAdminLoggedIn()) { logoutAdmin(); return ok(null, 'Logout successful'); }
   const state = getState();
   if (state) { state.auth.isLoggedIn = false; saveState(state); }
-  return ok(null, 'Logout berhasil');
+  return ok(null, 'Logout successful');
 }
 
 function mockGetMe() {
@@ -207,7 +207,7 @@ function mockUpdateMe(body) {
     if (fieldMap[key]) state.profile[fieldMap[key]] = value;
   });
   saveState(state);
-  return ok({ id: 1, ...userToDTO(state.profile) }, 'Profil diperbarui');
+  return ok({ id: 1, ...userToDTO(state.profile) }, 'Profile updated');
 }
 
 /* ============================================================
@@ -227,7 +227,7 @@ function mockListCareers(query) {
 
 function mockGetCareerBySlug(params) {
   const career = getCareerBySlug(params.slug);
-  if (!career) return notFound('Career tidak ditemukan');
+  if (!career) return notFound('Career not found');
   return ok(careerToDTO(career, true));
 }
 
@@ -249,7 +249,7 @@ function mockSubmitOnboarding(body) {
   recordProgressSnapshot(state);
   saveState(state);
 
-  return ok({ target_career_id: state.profile.targetCareerId, roadmap_id: state.roadmap.id }, 'Onboarding selesai');
+  return ok({ target_career_id: state.profile.targetCareerId, roadmap_id: state.roadmap.id }, 'Onboarding complete');
 }
 
 /* ============================================================
@@ -293,7 +293,7 @@ function mockSubmitAssessment(body) {
   recordProgressSnapshot(state);
   saveState(state);
 
-  return ok({ average_score: averageScore, achievements_unlocked: achievementsUnlocked }, 'Assessment tersimpan');
+  return ok({ average_score: averageScore, achievements_unlocked: achievementsUnlocked }, 'Assessment saved');
 }
 
 /* ============================================================
@@ -304,7 +304,7 @@ function mockSkillGap() {
   const state = currentStudent();
   if (!state) return unauthenticated();
   const career = getCareerBySlug(state.profile.targetCareerId);
-  if (!career) return fail(422, 'Belum ada target career.', { errors: { target_career_id: ['Pilih target career dulu.'] } });
+  if (!career) return fail(422, 'No target career yet.', { errors: { target_career_id: ['Choose a target career first.'] } });
 
   const gaps = computeSkillGaps(state);
   return ok({ career_name: career.name, gaps: gaps.map(gapToDTO) });
@@ -324,27 +324,27 @@ function mockGenerateRoadmap() {
   const state = currentStudent();
   if (!state) return unauthenticated();
   const career = getCareerBySlug(state.profile.targetCareerId);
-  if (!career) return fail(422, 'Belum ada target career.');
+  if (!career) return fail(422, 'No target career yet.');
 
   state.roadmap = generateRoadmap(state);
   saveState(state);
-  return ok({ roadmap_id: state.roadmap.id, phases_count: state.roadmap.phases.length }, 'Roadmap berhasil dibuat');
+  return ok({ roadmap_id: state.roadmap.id, phases_count: state.roadmap.phases.length }, 'Roadmap created');
 }
 
 function mockGetRoadmap() {
   const state = currentStudent();
   if (!state) return unauthenticated();
-  if (!state.roadmap) return notFound('Roadmap belum dibuat.');
+  if (!state.roadmap) return notFound('No roadmap has been created yet.');
   return ok(roadmapToDTO(state.roadmap));
 }
 
 function mockUpdateRoadmapPhase(params, body) {
   const state = currentStudent();
   if (!state) return unauthenticated();
-  if (!state.roadmap) return notFound('Roadmap belum dibuat.');
+  if (!state.roadmap) return notFound('No roadmap has been created yet.');
 
   const phase = state.roadmap.phases.find(p => String(p.id) === String(params.id));
-  if (!phase) return notFound('Fase roadmap tidak ditemukan.');
+  if (!phase) return notFound('Roadmap phase not found.');
 
   phase.status = body.status;
   if (body.status === 'in_progress') grantAchievement(state, 'first_roadmap');
@@ -354,7 +354,7 @@ function mockUpdateRoadmapPhase(params, body) {
     recordProgressSnapshot(state);
   }
   saveState(state);
-  return ok({ id: phase.id, status: phase.status }, 'Status fase diperbarui');
+  return ok({ id: phase.id, status: phase.status }, 'Phase status updated');
 }
 
 /* ============================================================
@@ -383,7 +383,7 @@ function mockToggleChecklist(params, body) {
   state.portfolio[params.item_code] = !!body.done;
   recordProgressSnapshot(state);
   saveState(state);
-  return ok({ item_code: params.item_code, done: !!body.done }, 'Checklist diperbarui');
+  return ok({ item_code: params.item_code, done: !!body.done }, 'Checklist updated');
 }
 
 function mockListCertificates() {
@@ -395,14 +395,14 @@ function mockListCertificates() {
 function mockAddCertificate(body) {
   const state = currentStudent();
   if (!state) return unauthenticated();
-  if (!body.title || !body.issuer) return fail(422, 'Validasi gagal', { errors: { title: ['Judul dan issuer wajib diisi.'] } });
+  if (!body.title || !body.issuer) return fail(422, 'Validation failed', { errors: { title: ['Title and issuer are required.'] } });
 
   const cert = { id: `cert-${Date.now()}`, title: body.title, issuer: body.issuer, year: body.year || null };
   state.certificates = state.certificates || [];
   state.certificates.push(cert);
   recordProgressSnapshot(state);
   saveState(state);
-  return ok(certToDTO(cert), 'Sertifikat ditambahkan', 201);
+  return ok(certToDTO(cert), 'Certificate added', 201);
 }
 
 function mockDeleteCertificate(params) {
@@ -410,7 +410,7 @@ function mockDeleteCertificate(params) {
   if (!state) return unauthenticated();
   state.certificates = (state.certificates || []).filter(c => String(c.id) !== String(params.id));
   saveState(state);
-  return ok(null, 'Sertifikat dihapus');
+  return ok(null, 'Certificate deleted');
 }
 
 /**
@@ -427,20 +427,20 @@ async function mockAnalyzeGithub(body) {
   if (!state) return unauthenticated();
 
   const username = body.github_username;
-  if (!username) return fail(422, 'Validasi gagal', { errors: { github_username: ['Username wajib diisi.'] } });
+  if (!username) return fail(422, 'Validation failed', { errors: { github_username: ['Username is required.'] } });
 
   let repos;
   try {
     const res = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}/repos?per_page=100`);
-    if (res.status === 404) return fail(404, 'Username GitHub tidak ditemukan.');
-    if (!res.ok) return fail(503, 'GitHub API sedang membatasi permintaan. Coba lagi nanti.');
+    if (res.status === 404) return fail(404, 'GitHub username not found.');
+    if (!res.ok) return fail(503, 'The GitHub API is rate limiting requests. Please try again later.');
     repos = await res.json();
   } catch (err) {
-    return fail(503, 'Gagal menghubungi GitHub. Cek koneksi internet kamu.');
+    return fail(503, 'Could not reach GitHub. Check your internet connection.');
   }
 
   if (!Array.isArray(repos) || repos.length === 0) {
-    return ok({ repos_analyzed: 0, languages: [], boosted_skills: [] }, 'Analisis GitHub selesai');
+    return ok({ repos_analyzed: 0, languages: [], boosted_skills: [] }, 'GitHub analysis complete');
   }
 
   const langCount = {};
@@ -468,7 +468,7 @@ async function mockAnalyzeGithub(body) {
     repos_analyzed: repos.length,
     languages: Object.entries(langCount).sort((a, b) => b[1] - a[1]).map(([name, repo_count]) => ({ name, repo_count })),
     boosted_skills: boosted,
-  }, 'Analisis GitHub selesai');
+  }, 'GitHub analysis complete');
 }
 
 /* ============================================================
@@ -476,7 +476,7 @@ async function mockAnalyzeGithub(body) {
    ============================================================ */
 
 function mockIndustryInsights(query) {
-  const region = query.region || 'Nasional';
+  const region = query.region || 'National';
   const list = getIndustryInsights().map(i => ({
     ...i,
     demand: getRegionalDemand(i.demand, region),
@@ -487,7 +487,7 @@ function mockIndustryInsights(query) {
 
 function mockIndustryTrend(params) {
   const history = getSkillTrendHistory(params.skill_id);
-  if (!history.length) return notFound('Data trend untuk skill ini tidak ditemukan.');
+  if (!history.length) return notFound('No trend data found for this skill.');
   return ok(history);
 }
 
@@ -565,7 +565,7 @@ function mockAdminListCareers() {
 
 function mockAdminCreateCareer(body) {
   if (!isAdminLoggedIn()) return unauthenticated();
-  if (!body.name) return fail(422, 'Validasi gagal', { errors: { name: ['Nama career wajib diisi.'] } });
+  if (!body.name) return fail(422, 'Validation failed', { errors: { name: ['Career name is required.'] } });
 
   const content = getAdminContent();
   let slug = body.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -573,7 +573,7 @@ function mockAdminCreateCareer(body) {
 
   const career = {
     id: slug, slug, name: body.name,
-    category: body.category || 'Umum', difficulty: body.difficulty || 'Intermediate',
+    category: body.category || 'General', difficulty: body.difficulty || 'Intermediate',
     industryDemand: body.industry_demand || 0, jobSampleSize: body.job_sample_size || 0,
     remoteFriendly: !!body.remote_friendly,
     shortDescription: body.short_description || '', description: body.description || '',
@@ -582,14 +582,14 @@ function mockAdminCreateCareer(body) {
   };
   content.careers.push(career);
   saveAdminContent(content);
-  return ok({ id: career.id, slug: career.slug }, 'Career ditambahkan', 201);
+  return ok({ id: career.id, slug: career.slug }, 'Career added', 201);
 }
 
 function mockAdminUpdateCareer(params, body) {
   if (!isAdminLoggedIn()) return unauthenticated();
   const content = getAdminContent();
   const idx = content.careers.findIndex(c => String(c.id) === String(params.id));
-  if (idx === -1) return notFound('Career tidak ditemukan.');
+  if (idx === -1) return notFound('Career not found.');
 
   const fieldMap = {
     name: 'name', category: 'category', difficulty: 'difficulty',
@@ -603,7 +603,7 @@ function mockAdminUpdateCareer(params, body) {
     content.careers[idx].requiredSkills = body.required_skills.map(r => ({ skillId: r.skill_id, level: r.level, importance: r.importance }));
   }
   saveAdminContent(content);
-  return ok({ id: content.careers[idx].id, name: content.careers[idx].name }, 'Career diperbarui');
+  return ok({ id: content.careers[idx].id, name: content.careers[idx].name }, 'Career updated');
 }
 
 function mockAdminDeleteCareer(params) {
@@ -611,7 +611,7 @@ function mockAdminDeleteCareer(params) {
   const content = getAdminContent();
   content.careers = content.careers.filter(c => String(c.id) !== String(params.id));
   saveAdminContent(content);
-  return ok(null, 'Career dihapus');
+  return ok(null, 'Career deleted');
 }
 
 function mockAdminListSkills() {
@@ -621,7 +621,7 @@ function mockAdminListSkills() {
 
 function mockAdminCreateSkill(body) {
   if (!isAdminLoggedIn()) return unauthenticated();
-  if (!body.name) return fail(422, 'Validasi gagal', { errors: { name: ['Nama skill wajib diisi.'] } });
+  if (!body.name) return fail(422, 'Validation failed', { errors: { name: ['Skill name is required.'] } });
 
   const content = getAdminContent();
   let id = (body.code || body.name).toLowerCase().replace(/[^a-z0-9]+/g, '');
@@ -629,18 +629,18 @@ function mockAdminCreateSkill(body) {
   const skill = { id, name: body.name, category: body.category || 'technical' };
   content.skills.push(skill);
   saveAdminContent(content);
-  return ok(skillToDTO(skill), 'Skill ditambahkan', 201);
+  return ok(skillToDTO(skill), 'Skill added', 201);
 }
 
 function mockAdminUpdateSkill(params, body) {
   if (!isAdminLoggedIn()) return unauthenticated();
   const content = getAdminContent();
   const idx = content.skills.findIndex(s => String(s.id) === String(params.id));
-  if (idx === -1) return notFound('Skill tidak ditemukan.');
+  if (idx === -1) return notFound('Skill not found.');
   if (body.name) content.skills[idx].name = body.name;
   if (body.category) content.skills[idx].category = body.category;
   saveAdminContent(content);
-  return ok(skillToDTO(content.skills[idx]), 'Skill diperbarui');
+  return ok(skillToDTO(content.skills[idx]), 'Skill updated');
 }
 
 function mockAdminDeleteSkill(params) {
@@ -648,7 +648,7 @@ function mockAdminDeleteSkill(params) {
   const content = getAdminContent();
   content.skills = content.skills.filter(s => String(s.id) !== String(params.id));
   saveAdminContent(content);
-  return ok(null, 'Skill dihapus');
+  return ok(null, 'Skill deleted');
 }
 
 function mockAdminListIndustryInsights() {
@@ -661,11 +661,11 @@ function mockAdminSaveIndustryInsight(body) {
   if (!isAdminLoggedIn()) return unauthenticated();
   const content = getAdminContent();
   const idx = content.industryInsights.findIndex(i => i.skillId === body.skill_id);
-  const record = { skillId: body.skill_id, demand: body.demand, trend: body.trend, jobSampleSize: body.job_sample_size, period: body.period || '3 bulan terakhir' };
+  const record = { skillId: body.skill_id, demand: body.demand, trend: body.trend, jobSampleSize: body.job_sample_size, period: body.period || 'Last 3 months' };
   if (idx === -1) content.industryInsights.push(record);
   else content.industryInsights[idx] = record;
   saveAdminContent(content);
-  return ok({ skill_id: record.skillId, demand: record.demand }, 'Data industri disimpan');
+  return ok({ skill_id: record.skillId, demand: record.demand }, 'Industry data saved');
 }
 
 function mockAdminDeleteIndustryInsight(params) {
@@ -673,7 +673,7 @@ function mockAdminDeleteIndustryInsight(params) {
   const content = getAdminContent();
   content.industryInsights = content.industryInsights.filter(i => i.skillId !== params.skill_id);
   saveAdminContent(content);
-  return ok(null, 'Data industri dihapus');
+  return ok(null, 'Industry data deleted');
 }
 
 function mockAdminListLearningResources(query) {
@@ -685,23 +685,23 @@ function mockAdminListLearningResources(query) {
 
 function mockAdminCreateLearningResource(body) {
   if (!isAdminLoggedIn()) return unauthenticated();
-  if (!body.title) return fail(422, 'Validasi gagal', { errors: { title: ['Judul wajib diisi.'] } });
+  if (!body.title) return fail(422, 'Validation failed', { errors: { title: ['Title is required.'] } });
   const content = getAdminContent();
-  const resource = { id: `res-${Date.now()}`, skillId: body.skill_id, title: body.title, provider: body.provider || 'Tidak diketahui', type: body.type || 'course' };
+  const resource = { id: `res-${Date.now()}`, skillId: body.skill_id, title: body.title, provider: body.provider || 'Unknown', type: body.type || 'course' };
   content.learningResources.push(resource);
   saveAdminContent(content);
-  return ok({ id: resource.id, title: resource.title }, 'Resource ditambahkan', 201);
+  return ok({ id: resource.id, title: resource.title }, 'Resource added', 201);
 }
 
 function mockAdminUpdateLearningResource(params, body) {
   if (!isAdminLoggedIn()) return unauthenticated();
   const content = getAdminContent();
   const idx = content.learningResources.findIndex(r => String(r.id) === String(params.id));
-  if (idx === -1) return notFound('Resource tidak ditemukan.');
+  if (idx === -1) return notFound('Resource not found.');
   const fieldMap = { title: 'title', provider: 'provider', type: 'type', skill_id: 'skillId' };
   Object.entries(body).forEach(([key, value]) => { if (fieldMap[key]) content.learningResources[idx][fieldMap[key]] = value; });
   saveAdminContent(content);
-  return ok({ id: content.learningResources[idx].id }, 'Resource diperbarui');
+  return ok({ id: content.learningResources[idx].id }, 'Resource updated');
 }
 
 function mockAdminDeleteLearningResource(params) {
@@ -709,7 +709,7 @@ function mockAdminDeleteLearningResource(params) {
   const content = getAdminContent();
   content.learningResources = content.learningResources.filter(r => String(r.id) !== String(params.id));
   saveAdminContent(content);
-  return ok(null, 'Resource dihapus');
+  return ok(null, 'Resource deleted');
 }
 
 function mockAdminListUsers() {
@@ -745,7 +745,7 @@ function mockAdminGetScoringSettings() {
 function mockAdminUpdateScoringSettings(body) {
   if (!isAdminLoggedIn()) return unauthenticated();
   const total = ['technical', 'soft', 'portfolio', 'experience', 'assessment'].reduce((s, k) => s + (Number(body[k]) || 0), 0);
-  if (Math.abs(total - 1) > 0.001) return fail(422, 'Validasi gagal', { errors: { total: ['Total bobot harus 1.0'] } });
+  if (Math.abs(total - 1) > 0.001) return fail(422, 'Validation failed', { errors: { total: ['Weights must total 1.0'] } });
 
   const content = getAdminContent();
   content.scoringWeights = {
@@ -753,16 +753,16 @@ function mockAdminUpdateScoringSettings(body) {
     experience: body.experience, assessment: body.assessment,
   };
   saveAdminContent(content);
-  return ok(content.scoringWeights, 'Bobot skor diperbarui');
+  return ok(content.scoringWeights, 'Score weights updated');
 }
 
 function mockAdminSetIndustryInsightMode(body) {
   if (!isAdminLoggedIn()) return unauthenticated();
-  if (!['auto', 'manual'].includes(body.mode)) return fail(422, 'Validasi gagal', { errors: { mode: ['Mode harus auto atau manual.'] } });
+  if (!['auto', 'manual'].includes(body.mode)) return fail(422, 'Validation failed', { errors: { mode: ['Mode must be auto or manual.'] } });
   const content = getAdminContent();
   content.industryInsightMode = body.mode;
   saveAdminContent(content);
-  return ok({ industry_insight_mode: content.industryInsightMode }, 'Mode industry insight diperbarui');
+  return ok({ industry_insight_mode: content.industryInsightMode }, 'Industry insight mode updated');
 }
 
 function mockAdminListScrapeRuns() {
@@ -790,5 +790,5 @@ function mockAdminTriggerScrapeRun() {
   };
   content.scrapeRuns.push(newRun);
   saveAdminContent(content);
-  return ok({ scrape_run_id: newRun.id }, 'Scraping dijalankan di background (simulasi)', 202);
+  return ok({ scrape_run_id: newRun.id }, 'Scraping started in the background (simulated)', 202);
 }

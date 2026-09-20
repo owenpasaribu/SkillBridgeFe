@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 function renderReadinessChart(history) {
   const container = document.getElementById('readinessChart');
   if (history.length < 2) {
-    container.innerHTML = '<p class="empty-state">Belum cukup data. Riwayat akan muncul setelah beberapa kali aktivitas.</p>';
+    container.innerHTML = '<p class="empty-state">Not enough data yet. History will appear after a few activities.</p>';
     return;
   }
 
@@ -37,18 +37,18 @@ function renderReadinessChart(history) {
   const dots = history.map((h, i) => {
     const x = padding + i * step;
     const y = height - padding - (h.readiness_score / maxScore) * (height - padding * 2);
-    return `<circle cx="${x}" cy="${y}" r="4" fill="#37409C"></circle>`;
+    return `<circle cx="${x}" cy="${y}" r="4" fill="#55662E"></circle>`;
   }).join('');
 
   const labels = history.map((h, i) => {
     const x = padding + i * step;
     const date = new Date(h.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-    return `<text x="${x}" y="${height - 4}" font-size="10" fill="#8A8FA3" text-anchor="middle">${date}</text>`;
+    return `<text x="${x}" y="${height - 4}" font-size="10" fill="#6F644D" text-anchor="middle">${date}</text>`;
   }).join('');
 
   container.innerHTML = `
     <svg viewBox="0 0 ${width} ${height}" style="width:100%; height:auto;">
-      <polyline points="${points}" fill="none" stroke="#37409C" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <polyline points="${points}" fill="none" stroke="#55662E" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
       ${dots}
       ${labels}
     </svg>`;
@@ -57,7 +57,7 @@ function renderReadinessChart(history) {
 function renderSkillProgress(history) {
   const list = document.getElementById('skillProgressList');
   if (history.length < 2) {
-    list.innerHTML = '<p class="empty-state">Belum ada riwayat skill untuk dibandingkan.</p>';
+    list.innerHTML = '<p class="empty-state">No skill history to compare yet.</p>';
     return;
   }
   const first = history[0].skill_snapshot;
@@ -68,13 +68,13 @@ function renderSkillProgress(history) {
     <div class="skill-progress-row">
       <span>${skillName(id)}</span>
       <span>${first[id] ?? 0}% &rarr; <strong>${last[id] ?? 0}%</strong></span>
-    </div>`).join('') || '<p class="empty-state">Belum ada data skill.</p>';
+    </div>`).join('') || '<p class="empty-state">No skill data yet.</p>';
 }
 
 function renderAssessmentHistory(history) {
   const list = document.getElementById('assessmentHistoryList');
   if (history.length === 0) {
-    list.innerHTML = '<p class="empty-state">Belum pernah mengerjakan assessment.</p>';
+    list.innerHTML = '<p class="empty-state">You have not taken an assessment yet.</p>';
     return;
   }
   list.innerHTML = [...history].reverse().map(h => `

@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#F3EADB">
 <title>Profile & Settings — SkillBridge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,7 +20,7 @@
 <div class="app-shell">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#E3A73B" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#37409C" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#171B2E" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none"><path d="M4 21C4 21 9 13 16 13C23 13 28 21 28 21" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="21" x2="8" y2="25" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="21" x2="16" y2="26" stroke="#D9963F" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="21" x2="24" y2="25" stroke="#55662E" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="25" x2="28" y2="25" stroke="#2E271E" stroke-width="2.5" stroke-linecap="round"/></svg>
       SkillBridge
     </div>
     <ul class="sidebar-nav">
@@ -33,56 +35,56 @@
       <li><a href="profile.html"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c1.5-4 4-6 7-6s5.5 2 7 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Profile &amp; Settings</a></li>
     </ul>
     <div class="sidebar-footer">
-      <a href="#" data-action="logout" class="btn btn-ghost btn-sm btn-block">Keluar</a>
+      <a href="#" data-action="logout" class="btn btn-ghost btn-sm btn-block">Sign out</a>
     </div>
   </aside>
   <div class="app-main">
     <div class="app-topbar">
-      <button data-action="toggle-sidebar" class="nav-toggle" style="display:inline-flex;" aria-label="Buka menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#171B2E" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <button data-action="toggle-sidebar" class="nav-toggle" style="display:inline-flex;" aria-label="Open menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#2E271E" stroke-width="2" stroke-linecap="round"/></svg></button>
       <span class="brand" style="font-size:1rem;">SkillBridge</span>
       <span style="width:22px;"></span>
     </div>
     <div class="app-content" style="max-width:640px;">
       <h2 style="margin-bottom:4px;">Profile &amp; Settings</h2>
-      <p class="text-soft">Kelola data dasar dan target kariermu.</p>
+      <p class="text-soft">Manage your basic details and target career.</p>
 
-      <div class="save-toast" id="saveToast">Perubahan tersimpan.</div>
+      <div class="save-toast" id="saveToast">Changes saved.</div>
 
       <div class="card" style="margin-bottom:20px;">
         <div class="flex-between" style="margin-bottom:20px;">
           <div class="avatar-circle" id="avatarCircle"></div>
-          <button id="logoutBtn" class="btn btn-ghost btn-sm">Keluar</button>
+          <button id="logoutBtn" class="btn btn-ghost btn-sm">Sign out</button>
         </div>
         <form id="profileForm">
-          <div class="field"><label for="p-fullName">Nama Lengkap</label><input type="text" id="p-fullName"></div>
+          <div class="field"><label for="p-fullName">Full Name</label><input type="text" id="p-fullName"></div>
           <div class="field"><label for="p-email">Email</label><input type="email" id="p-email" disabled></div>
-          <div class="field"><label for="p-university">Universitas</label><input type="text" id="p-university"></div>
+          <div class="field"><label for="p-university">University</label><input type="text" id="p-university"></div>
           <div class="field-row">
-            <div class="field"><label for="p-major">Jurusan</label><input type="text" id="p-major"></div>
+            <div class="field"><label for="p-major">Major</label><input type="text" id="p-major"></div>
             <div class="field"><label for="p-semester">Semester</label><input type="number" id="p-semester" min="1" max="14"></div>
           </div>
-          <div class="field"><label for="p-gradYear">Perkiraan Tahun Lulus</label><input type="number" id="p-gradYear"></div>
-          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+          <div class="field"><label for="p-gradYear">Expected Graduation Year</label><input type="number" id="p-gradYear"></div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
-        <h3>Target Karier</h3>
+        <h3>Target Career</h3>
         <p class="text-sm" id="currentCareerLine"></p>
         <div class="field">
-          <label for="p-timeline">Target siap dalam berapa bulan?</label>
+          <label for="p-timeline">Ready within how many months?</label>
           <input type="number" id="p-timeline" min="1" max="36">
         </div>
         <div class="flex-between">
-          <a href="career-explorer.html" class="btn-text text-sm">Ganti target karier</a>
-          <button id="saveTimelineBtn" class="btn btn-ghost btn-sm">Simpan Timeline</button>
+          <a href="career-explorer.html" class="btn-text text-sm">Change target career</a>
+          <button id="saveTimelineBtn" class="btn btn-ghost btn-sm">Save Timeline</button>
         </div>
       </div>
 
       <div class="card" style="border-color: var(--color-critical);">
-        <h3>Zona Berbahaya</h3>
-        <p class="text-sm">Menghapus data akan mengeluarkan kamu dan menghapus seluruh progres yang tersimpan di browser ini.</p>
-        <button id="resetBtn" class="btn btn-danger btn-sm">Hapus Semua Data Saya</button>
+        <h3>Danger Zone</h3>
+        <p class="text-sm">Deleting your data will sign you out and remove all progress saved in this browser.</p>
+        <button id="resetBtn" class="btn btn-danger btn-sm">Delete All My Data</button>
       </div>
     </div>
   </div>
@@ -93,6 +95,7 @@
 <script src="js/storage.js"></script>
 <script src="js/scoring.js"></script>
 <script src="js/api-mock.js"></script>
+<script src="js/api-live.js"></script>
 <script src="js/api.js"></script>
 <script src="js/main.js"></script>
 <script src="js/profile.js"></script>

@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!meRes.data.onboarding_complete) { window.location.href = 'onboarding.html'; return; }
 
   const profile = meRes.data;
-  const firstName = (profile.full_name || '').split(' ')[0] || 'Sobat SkillBridge';
-  document.getElementById('greeting').textContent = `Halo, ${firstName}!`;
+  const firstName = (profile.full_name || '').split(' ')[0] || 'there';
+  document.getElementById('greeting').textContent = `Hello, ${firstName}!`;
 
   let career = null;
   if (profile.target_career_id) {
@@ -51,10 +51,10 @@ function renderReadiness(readiness, progressHistory) {
     const prev = progressHistory[progressHistory.length - 2].readiness_score;
     const diff = readiness.overall - prev;
     trendEl.textContent = diff === 0
-      ? 'Stabil dari pengecekan sebelumnya'
-      : `${diff > 0 ? 'Naik' : 'Turun'} ${Math.abs(diff)}% dari sebelumnya`;
+      ? 'Unchanged since your last check'
+      : `${diff > 0 ? 'Up' : 'Down'} ${Math.abs(diff)}% from last time`;
   } else {
-    trendEl.textContent = 'Ini adalah perhitungan pertamamu';
+    trendEl.textContent = 'This is your first calculation';
   }
 }
 
@@ -63,7 +63,7 @@ function renderSkillOverview(gaps, career) {
   list.innerHTML = '';
 
   if (!career || gaps.length === 0) {
-    list.innerHTML = '<p class="empty-state">Belum ada data skill. Yuk kerjakan Skill Assessment dulu.</p>';
+    list.innerHTML = '<p class="empty-state">No skill data yet. Take the Skill Assessment first.</p>';
     return;
   }
 
@@ -83,7 +83,7 @@ function renderGapSummary(gaps, career) {
   const strong = document.getElementById('strongList');
 
   if (!career) {
-    [critical, moderate, strong].forEach(el => el.innerHTML = '<span class="text-faint">Belum ada target karier</span>');
+    [critical, moderate, strong].forEach(el => el.innerHTML = '<span class="text-faint">No target career yet</span>');
     return;
   }
 
@@ -94,9 +94,9 @@ function renderGapSummary(gaps, career) {
     else bucket.strong.push(g.skill_name);
   });
 
-  critical.innerHTML = bucket.critical.length ? bucket.critical.join(', ') : '<span class="text-faint">Tidak ada</span>';
-  moderate.innerHTML = bucket.moderate.length ? bucket.moderate.join(', ') : '<span class="text-faint">Tidak ada</span>';
-  strong.innerHTML = bucket.strong.length ? bucket.strong.join(', ') : '<span class="text-faint">Tidak ada</span>';
+  critical.innerHTML = bucket.critical.length ? bucket.critical.join(', ') : '<span class="text-faint">None</span>';
+  moderate.innerHTML = bucket.moderate.length ? bucket.moderate.join(', ') : '<span class="text-faint">None</span>';
+  strong.innerHTML = bucket.strong.length ? bucket.strong.join(', ') : '<span class="text-faint">None</span>';
 }
 
 function renderRoadmapProgress(roadmapRes, career) {
@@ -105,8 +105,8 @@ function renderRoadmapProgress(roadmapRes, career) {
   const labelEl = document.getElementById('roadmapProgressLabel');
 
   if (roadmapRes.status !== 200) {
-    titleEl.textContent = 'Belum ada roadmap aktif';
-    labelEl.textContent = 'Selesaikan onboarding atau kunjungi Learning Roadmap untuk membuatnya.';
+    titleEl.textContent = 'No active roadmap yet';
+    labelEl.textContent = 'Finish onboarding or visit Learning Roadmap to create one.';
     return;
   }
   const phases = roadmapRes.data.phases;
@@ -115,7 +115,7 @@ function renderRoadmapProgress(roadmapRes, career) {
 
   titleEl.textContent = `${career ? career.name : ''} Roadmap`;
   fillEl.style.width = `${pct}%`;
-  labelEl.textContent = `${pct}% selesai — ${doneCount} dari ${phases.length} fase`;
+  labelEl.textContent = `${pct}% complete — ${doneCount} of ${phases.length} phases`;
 }
 
 function renderNextAction(gaps, career) {
@@ -123,18 +123,18 @@ function renderNextAction(gaps, career) {
   const bodyEl = document.getElementById('nextActionBody');
 
   if (!career) {
-    titleEl.textContent = 'Pilih target karier untuk mulai';
-    bodyEl.textContent = 'Buka Career Explorer untuk melihat pilihan karier dan skill yang dibutuhkan.';
+    titleEl.textContent = 'Choose a target career to get started';
+    bodyEl.textContent = 'Open Career Explorer to browse careers and the skills they require.';
     return;
   }
 
   const relevant = gaps.filter(g => g.category !== 'strong');
   if (relevant.length === 0) {
-    titleEl.textContent = 'Skill kamu sudah cukup kuat!';
-    bodyEl.textContent = 'Fokus selanjutnya: lengkapi Portfolio Readiness supaya makin siap melamar.';
+    titleEl.textContent = 'Your skills are already strong!';
+    bodyEl.textContent = 'Next focus: complete Portfolio Readiness so you are ready to apply.';
     return;
   }
   const top = relevant[0];
-  titleEl.textContent = `Prioritas tertinggi: ${top.skill_name}`;
-  bodyEl.textContent = `Level kamu saat ini ${top.user_level}%, dibutuhkan ${top.required_level}% untuk ${career.name}. Mulai dari fase pertama di Learning Roadmap.`;
+  titleEl.textContent = `Top priority: ${top.skill_name}`;
+  bodyEl.textContent = `Your level is currently ${top.user_level}%, and ${top.required_level}% is required for ${career.name}. Start with the first phase in Learning Roadmap.`;
 }
