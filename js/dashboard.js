@@ -67,7 +67,9 @@ function renderSkillOverview(gaps, career) {
     return;
   }
 
-  gaps.slice(0, 6).forEach(g => {
+  const sorted = [...gaps].sort((a, b) => b.user_level - a.user_level);
+
+  sorted.slice(0, 6).forEach(g => {
     const row = document.createElement('div');
     row.className = 'skill-row';
     row.innerHTML = `

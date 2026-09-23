@@ -162,3 +162,22 @@ Kolom "Dites FE" dikosongkan sampai dicoba manual di browser.
    (admin-skills 12), jadi berpindah-pindah halaman dengan cepat bisa kena 429 dan
    halaman FE menjadi kosong. Saat pengujian, error itu hilang setelah limit dinaikkan.
    Untuk demo/development, naikkan di `RouteServiceProvider` (mis. 300).
+
+## Endpoint Usulan — Belum Ada di Dokumen Kontrak Awal
+
+Selama proses pengembangan FE, ditemukan beberapa kebutuhan yang belum
+punya endpoint di dokumen kontrak API awal:
+
+| Endpoint usulan | Kebutuhan |
+|---|---|
+| `GET /me/skills` | Level semua skill milik user (dipakai Career Detail & Onboarding step 3) |
+| `GET /assessment/history` | Riwayat skor assessment dari waktu ke waktu (halaman My Growth) |
+| `GET /skills` (public) | Onboarding step 3 & Skill Assessment butuh daftar semua skill |
+
+Catatan tambahan:
+- `GET /careers` belum punya parameter pencarian nama — pencarian di
+  Career Explorer masih difilter di FE.
+- `GET /admin/careers` (list) cuma balas `required_skills_count`, jadi
+  form edit career di admin memanggil `GET /careers/:slug` (endpoint
+  publik) untuk ambil `required_skills` lengkap.
+- `GET /admin/users` diperlakukan **read-only** di FE, sesuai dokumen.

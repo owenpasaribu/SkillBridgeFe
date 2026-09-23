@@ -1,25 +1,195 @@
-# SkillBridge — Prototype (HTML/CSS/JS)
+# SkillBridge
 
-Prototype front-end untuk SkillBridge — platform career readiness & skill gap
-analysis untuk mahasiswa. Dibuat dengan HTML, CSS, dan JavaScript murni
-(tanpa framework, tanpa build tool) supaya bisa langsung dibuka di browser.
+Platform career readiness & skill gap analysis untuk mahasiswa. Repo ini
+adalah **Front-End** SkillBridge, tapi README ini juga menjelaskan cara
+menjalankan **Back-End (Laravel)** dan **ML Service (Python/Flask)** secara
+lengkap, karena FE tidak bisa berfungsi penuh tanpa keduanya.
 
-## Cara menjalankan
+## Live Demo
 
-Buka `index.html` langsung di browser (double click), atau jalankan local
-server sederhana supaya lebih stabil, contoh:
+| Komponen | Link |
+|---|---|
+| Frontend | `[ISI: link deploy FE, mis. Netlify/Vercel/GitHub Pages]` |
+| Backend API | https://skillbridge-production-f8ed.up.railway.app |
+| Backend API Docs (Scribe) | https://skillbridge-production-f8ed.up.railway.app/docs |
+| ML Service | https://skill-bridge-ml-asaj.vercel.app |
+
+## Repository
+
+| Komponen | Repo |
+|---|---|
+| Frontend (repo ini) | https://github.com/owenpasaribu/SkillBridgeFe.git |
+| Backend (Laravel) | https://github.com/DwiAmandaAP/SkillBridge.git |
+| ML Service (Python/Flask) | https://github.com/DwiAmandaAP/skillBridge-ml.git |
+
+## Tech Stack
+
+**Frontend**
+- HTML, CSS, JavaScript murni — tanpa framework
+
+**Backend**
+- Laravel 10
+- PHP 8.2
+- MySQL
+- Laravel Sanctum (autentikasi token)
+- Scribe (dokumentasi API otomatis)
+
+**ML Service**
+- Python 3.10
+- Flask
+- Exact/substring skill matching + fallback dictionary manual
+
+## Arsitektur Sistem
 
 ```
+┌─────────────┐        ┌──────────────────────┐        ┌─────────────────┐
+│  Frontend   │──HTTP─►│   Backend (Laravel)   │◄─HTTP─►│   ML Service     │
+│ (HTML/JS)   │  /api  │   - Auth, Career,     │ /extract-skills │ (Python/Flask) │
+│             │        │     Skill Gap, dst.   │ /internal/skills│ - Skill matching│
+│             │        │   - Scraper (Karirhub)│        │   dari taxonomy  │
+│             │        │   - Admin & Insights   │        │                  │
+└─────────────┘        └──────────┬────────────┘        └─────────────────┘
+                                    │
+                                    ▼
+                              ┌───────────┐
+                              │   MySQL   │
+                              └───────────┘
+```
+
+Alur singkat:
+1. **FE** memanggil BE lewat `js/api.js` (lihat bagian [Arsitektur API Client](#arsitektur-api-client---terhubung-ke-laravel-be) di bawah).
+2. **BE** menjalankan scraping lowongan (dari Karirhub Kemnaker) secara terjadwal, menyimpan mentah ke database.
+3. **BE** mengirim batch teks lowongan ke **ML Service** lewat `POST /extract-skills` untuk ekstraksi skill.
+4. **BE** mengagregasi hasil ekstraksi jadi data demand skill & role (Industry Insights, Role Insights) yang ditampilkan ke FE.
+
+---
+
+## Instalasi & Menjalankan Sistem
+
+Urutan menjalankan: **Backend → ML Service → Frontend** (BE dan ML sebaiknya
+sudah hidup sebelum FE mulai dipakai, supaya semua fitur berfungsi).
+
+### 1. Backend (Laravel)
+
+**Prasyarat:** PHP 8.2, Composer, MySQL.
+
+```bash
+git clone [ISI: link repo BE]
+cd skillbridge-backend
+
+composer install
+cp .env.example .env
+php artisan key:generate
+```
+
+Buka `.env`, sesuaikan koneksi database (`DB_DATABASE`, `DB_USERNAME`,
+`DB_PASSWORD`), lalu isi juga:
+
+```env
+ML_SERVICE_URL=http://localhost:8001
+ML_SERVICE_TOKEN=isi-token-rahasia-sama-dengan-ml-service
+ML_SERVICE_TIMEOUT=15
+```
+
+Jalankan migrasi & seeder:
+
+```bash
+php artisan migrate --seed
+```
+
+Jalankan server:
+
+```bash
+php artisan serve
+```
+
+Backend berjalan di `http://localhost:8000`, API di `http://localhost:8000/api/v1`.
+
+**Menjalankan scraping lowongan secara manual** (opsional, untuk generate data demand skill/role):
+
+```bash
+php artisan scrape:jobs
+```
+
+> Catatan: di hosting gratis yang tidak punya fitur cron job bawaan, scraping
+> dijadwalkan lewat layanan eksternal (cron-job.org) yang memanggil endpoint
+> HTTP terproteksi token, bukan lewat scheduler Laravel biasa. Lihat
+> dokumentasi teknis untuk detail endpoint ini.
+
+**Akun admin** tidak dibuat lewat seeder produksi — perlu dibuat manual
+dengan mengubah kolom `role` user menjadi `admin` di database.
+
+### 2. ML Service (Python/Flask)
+
+**Prasyarat:** Python 3.10.
+
+```bash
+git clone [ISI: link repo ML]
+cd skillbridge-ml
+
+python -m venv venv
+source venv/bin/activate      
+
+pip install -r requirements.txt
+cp .env.example .env
+```
+
+Isi `.env`:
+
+```env
+BE_BASE_URL=http://localhost:8000/api/v1
+SERVICE_TOKEN=isi-token-rahasia-sama-dengan-backend
+TAXONOMY_REFRESH_SECONDS=86400
+PORT=8001
+```
+
+> **Penting:** `SERVICE_TOKEN` di sini harus **persis sama** dengan
+> `ML_SERVICE_TOKEN` di `.env` Backend — token ini yang dipakai untuk
+> autentikasi dua arah antara BE dan ML.
+
+Jalankan:
+
+```bash
+python app.py
+```
+
+ML Service berjalan di `http://localhost:8001`. Pastikan Backend sudah
+berjalan lebih dulu, karena ML Service mengambil daftar skill taxonomy dari
+Backend saat start (`GET /internal/skills`).
+
+### 3. Frontend
+
+Tidak butuh instalasi dependency apapun (tanpa `npm install`).
+
+```bash
+git clone [ISI: link repo FE, atau langsung repo ini]
+cd skillbridge-frontend
+```
+
+Buka `js/api.js`, pastikan:
+
+```js
+API_MODE = 'live';
+API_BASE_URL = 'http://localhost:8000/api/v1'; atau URL backend production
+```
+
+Jalankan lewat local server (bukan double-click `index.html`, supaya semua
+fitur — termasuk fetch ke API — berjalan normal):
+
+```bash
 npx serve .
 ```
 
-lalu buka `http://localhost:3000`.
+Buka `http://localhost:3000`.
 
-## Cara mencoba alurnya
+---
+
+## Cara Mencoba Alurnya
 
 1. Buka `index.html`, klik **Analyze My Skills** untuk daftar, atau
-2. Buka `login.html` lalu klik **Coba sebagai akun demo (Student)** untuk langsung
-   masuk dengan data contoh (target karier Data Engineer, skill sudah terisi).
+2. Buka `login.html` lalu isi "Budi@gmail.com" untuk email dengan password
+  "password" untuk langsung masuk dengan ke akun testing yang sudah
+  memiliki data contoh (target karier Data Engineer, skill sudah terisi).
 
 ### Login terpadu (satu alur untuk Student & Admin)
 
@@ -27,16 +197,16 @@ Hanya ada **satu halaman login** (`login.html`) untuk kedua role — tidak ada
 halaman login admin terpisah. Sistem otomatis mendeteksi dari email yang
 dipakai lalu mengarahkan ke dashboard yang sesuai:
 
-- Akun **admin demo**: `admin@skillbridge.id` / `admin123` (atau klik tombol
-  "Coba sebagai Admin" di halaman login) → masuk ke `admin-dashboard.html`.
-- Akun **student**: hasil register di browser yang sama, atau tombol
-  "Coba sebagai akun demo (Student)" → masuk ke `dashboard.html`.
+- Akun **admin**: dibuat manual di database backend (`role = 'admin'`),
+  tidak ada akun demo bawaan di mode `live`.
+- Akun **student**: hasil register lewat halaman Register.
 
-Sesi admin dan sesi student disimpan terpisah di localStorage
-(`skillbridge_admin_session_v1` vs `skillbridge_state_v1`), jadi keduanya
-bisa aktif berdampingan tanpa saling menimpa data.
+> Tombol "Coba sebagai akun demo" hanya berfungsi saat `API_MODE = 'mock'`
+> (localStorage, tanpa backend) — lihat bagian [Mode Mock](#arsitektur-api-client---terhubung-ke-laravel-be) di bawah.
 
-## Struktur folder
+---
+
+## Struktur Folder (Frontend)
 
 ```
 skillbridge/
@@ -52,7 +222,7 @@ skillbridge/
 ├── skill-assessment.html      Assessment berbasis skenario
 ├── skill-gap.html              Core feature: perbandingan skill vs target
 ├── learning-roadmap.html       Roadmap belajar, dibuat otomatis dari gap
-├── industry-insights.html      Data demand skill (demo data)
+├── industry-insights.html      Data demand skill (dari BE, hasil scraping+ML)
 ├── portfolio-readiness.html    Checklist kesiapan portofolio
 ├── progress.html                Riwayat perkembangan & achievement
 ├── profile.html                  Profil & pengaturan akun
@@ -61,114 +231,34 @@ skillbridge/
 ├── admin-skills.html                 CRUD daftar skill
 ├── admin-industry-insights.html       CRUD data demand skill industri
 ├── admin-learning-resources.html       CRUD resource belajar per skill
-├── admin-users.html                    Daftar user (demo + akun aktif browser ini)
+├── admin-users.html                    Daftar user (read-only)
 ├── admin-analytics.html                 Statistik lebih lengkap
 ├── admin-settings.html                    Konfigurasi bobot formula Career Readiness Score
+├── admin-scrape-runs.html                  Data Pipeline: riwayat & trigger scraping
+├── 404.html
+├── favicon.svg
 ├── css/
 │   ├── base.css               Variabel warna/font, reset, tipografi
 │   └── components.css          Semua komponen UI (card, button, table, dst)
 └── js/
-    ├── data.js                 Seed data mentah: skill, career, roadmap content, industry insight
-    ├── admin-store.js            Penyimpanan konten yang dikelola admin + fungsi accessor bersama
-    │                              (getCareerBySlug, skillName, dst) — dipakai SEMUA halaman
+    ├── data.js                 Seed data mentah (dipakai mode mock)
+    ├── admin-store.js            Accessor bersama untuk data admin (mode mock)
     ├── storage.js                Helper localStorage untuk sesi & data akun student
     ├── scoring.js                 Logika Career Readiness Score, Skill Gap, generator Roadmap
     ├── api.js                      API client — satu-satunya file yang dipanggil halaman lain
-    ├── api-mock.js                  "Backend palsu" — implementasi mock persis kontrak API
+    ├── api-mock.js                  "Backend palsu" (localStorage), untuk demo tanpa BE
     ├── api-live.js                  Adapter ke backend Laravel asli (mode live)
-    ├── main.js                     Util bersama (sidebar mobile, nav aktif, logout student & admin)
+    ├── main.js                     Util bersama (sidebar mobile, nav aktif, logout)
     ├── auth.js, onboarding.js, dashboard.js, career-explorer.js,
     │   career-detail.js, assessment.js, skill-gap.js, roadmap.js,
     │   industry-insights.js, portfolio.js, progress.js, profile.js
     ├── admin-dashboard.js, admin-careers.js, admin-skills.js,
-    │   admin-industry.js, admin-resources.js, admin-users.js, admin-analytics.js,
-    │   admin-settings.js
+    │   admin-industry.js, admin-resources.js, admin-users.js,
+    │   admin-analytics.js, admin-settings.js, admin-scrape-runs.js
     └── (satu file JS per halaman, isinya logika halaman itu saja)
 ```
 
-## Catatan penting — ini prototype front-end only
-
-- **Tidak ada backend.** Semua data (profil, skill, roadmap, progres)
-  disimpan di `localStorage` browser lewat `js/storage.js`. Data hanya
-  tersimpan di perangkat/browser yang sama, dan hilang kalau localStorage
-  dibersihkan.
-- **"Login" tidak memverifikasi password sungguhan** — hanya mencocokkan
-  email dengan akun yang pernah didaftarkan di browser tersebut. Ini
-  disengaja karena belum ada backend/API auth.
-- **Career Readiness Score & Skill Gap dihitung real-time** dari data yang
-  ada di `localStorage`, lewat fungsi-fungsi di `js/scoring.js`. Formula
-  dan bobotnya bisa diubah di sana.
-- **Learning Roadmap dibuat otomatis** dari hasil skill gap (bukan
-  ditulis manual per karier) — lihat `generateRoadmap()` di `scoring.js`
-  dan konten pembelajaran generik per skill di `SKILL_CONTENT` (`data.js`).
-- Semua angka industri/statistik yang ditampilkan (Industry Insights,
-  statistik di landing page) adalah **data contoh**, ditandai "Demo Data"
-  sesuai arahan dokumen perencanaan awal.
-
-- **Career & Skill Management di admin benar-benar terhubung ke sisi student** —
-  data career/skill dibaca lewat fungsi bersama di `js/admin-store.js`
-  (`getAllCareers()`, `getCareerBySlug()`, `getAllSkills()`, `skillName()`,
-  dst). Jadi kalau admin tambah/edit/hapus career atau skill, perubahannya
-  langsung muncul di Career Explorer, Career Detail, Skill Gap, Skill
-  Assessment, Onboarding, dan Roadmap sisi student — bukan cuma tampil di
-  halaman admin saja.
-- **Learning Resources dan Industry Insights juga terhubung** — resource yang
-  ditambahkan admin muncul di Learning Roadmap student, dan angka demand
-  yang diedit admin langsung tampil di halaman Industry Insights student.
-- **User Management** menampilkan gabungan user contoh (dummy, untuk demo)
-  dan akun student asli yang sedang aktif di browser ini — belum benar-benar
-  multi-user lintas perangkat karena masih localStorage-based.
-- **Admin Settings** memungkinkan bobot formula Career Readiness Score
-  (Technical/Soft/Portfolio/Experience/Assessment) diubah langsung dari UI,
-  sesuai catatan di dokumen perencanaan bahwa formula harus bisa
-  dikonfigurasi, bukan hardcode permanen.
-- **Forgot/Reset Password** hanya simulasi alurnya (tidak ada pengiriman
-  email sungguhan, dan password memang tidak pernah disimpan di prototype
-  ini) — dijelaskan langsung di halamannya supaya tidak menyesatkan saat
-  didemokan.
-
-## Halaman yang sudah lengkap
-
-Seluruh 26 halaman di sitemap dokumen perencanaan awal sudah dibuat: 8
-halaman public (termasuk forgot/reset password), 9 halaman student, dan 8
-halaman admin (termasuk Settings).
-
-## Peningkatan dari masukan revisi (skill demand, trend, GitHub, dll)
-
-- **Skill demand naratif** — Industry Insights & Career Detail sekarang
-  menampilkan kalimat seperti "SQL muncul di 82% dari ~350 lowongan yang
-  dianalisis (3 bulan terakhir)", bukan cuma angka telanjang. Field
-  `jobSampleSize` & `period` bisa diedit admin di Career Management dan
-  Industry Data Management.
-- **Trend chart** — tiap skill di Industry Insights punya sparkline mini
-  dari histori 6 bulan (`getSkillTrendHistory()` di `admin-store.js`).
-  Datanya di-generate deterministik dari demand + trend saat ini (bukan
-  histori riil), jadi angkanya konsisten tiap dibuka ulang.
-- **Roadmap prioritas & durasi lebih pintar** — `priorityFor()` di
-  `scoring.js` sekarang ikut mempertimbangkan demand industri skill
-  tersebut (bukan cuma gap & kebutuhan career), dan skill dengan demand
-  lebih tinggi didahulukan kalau prioritasnya sama. Estimasi durasi
-  belajar tiap fase roadmap juga menyesuaikan besar gap user — gap besar
-  butuh waktu lebih lama dari gap kecil, bukan angka tetap per skill.
-- **Validasi skill via GitHub (data publik ASLI, bukan simulasi)** — di
-  halaman Portfolio Readiness, user bisa masukkan username GitHub lalu
-  sistem memanggil `api.github.com/users/{username}/repos` langsung dari
-  browser (GitHub REST API publik mendukung CORS tanpa perlu API key),
-  menghitung bahasa pemrograman yang dipakai, dan menaikkan level skill
-  teknis yang relevan berdasarkan aktivitas repo nyata. Ini beneran
-  jalan selama user punya repository publik di GitHub — bukan mock data.
-- **Sertifikat manual** — user bisa tambah/hapus sertifikat di Portfolio
-  Readiness, ikut menyumbang ke Portfolio Readiness Score lewat kategori
-  "Certifications" baru.
-- **Filter region & remote** — Industry Insights punya filter region
-  (Nasional/Jabodetabek/Jawa Timur/Jawa Barat/Remote) yang menyesuaikan
-  angka demand lewat `REGION_MULTIPLIER` (simulasi, bukan data regional
-  riil). Career Explorer & Career Detail punya badge dan filter
-  "Remote-friendly" per career (`remoteFriendly` field, bisa diedit admin).
-- **Transparansi metodologi** — semua badge "Demo Data" di seluruh
-  halaman sekarang jadi tooltip interaktif (hover/tap) yang menjelaskan
-  sumber data, sample size, dan periode — supaya tidak ada angka yang
-  terkesan seperti data riil tanpa penjelasan.
+---
 
 ## Arsitektur API Client — terhubung ke Laravel BE
 
@@ -189,71 +279,39 @@ Halaman (dashboard.js, admin-careers.js, dst)
         └─ API_MODE = 'mock'         ─► js/api-mock.js ─► "backend palsu" di localStorage
 ```
 
-### Menjalankan FE + BE
-
-1. Backend sudah ada di Railway: `https://skillbridge-production-f8ed.up.railway.app`
-   (dokumentasi di `/docs`). Untuk backend lokal: `php artisan migrate --seed` lalu
-   `php artisan serve` (`http://localhost:8000`).
-2. Buka `js/api.js`, pastikan `API_MODE = 'live'` dan `API_BASE_URL` **lengkap**
-   (awalan `https://` dan akhiran `/api/v1`), mis.
-   `https://skillbridge-production-f8ed.up.railway.app/api/v1` (Railway) atau
-   `http://localhost:8000/api/v1` (lokal).
-3. Jalankan FE lewat local server (bukan double-click `index.html`), mis.
-   `npx serve .`. Backend sudah mengizinkan semua origin (`config/cors.php`).
-4. Daftar akun student lewat halaman Register. Akun admin harus dibuat di
-   database backend (kolom `role = 'admin'`) — tidak ada seeder admin di BE saat ini.
-
-Mau demo tanpa backend? Ubah `API_MODE` jadi `'mock'` — tombol akun demo di
-halaman login akan bekerja lagi seperti prototype awal.
-
-### Bahasa & halaman tambahan
-
-Antarmuka berbahasa Inggris. Ada halaman admin **Data Pipeline** (`admin-scrape-runs.html`),
-halaman `404.html` (otomatis dipakai GitHub Pages/Netlify/Vercel), dan `favicon.svg`.
-Komentar di dalam kode masih berbahasa Indonesia.
 
 ### Kenapa ada `js/api-live.js`
 
-Bentuk respons BE yang sebenarnya beda dari yang diasumsikan prototype
-(mis. `GET /me` dibungkus `data.user`, checklist portfolio berupa daftar datar,
-sertifikat ada di `/portfolio/certificates`, id career/skill berupa angka).
-Semua penyesuaian itu dikumpulkan di satu file supaya halaman-halaman tidak
-perlu tahu detail BE. Daftar endpoint yang belum ada / berbeda di BE ada di
-`ENDPOINT_TRACKER.md`.
+Bentuk respons BE yang sebenarnya beda dari yang diasumsikan prototype awal
+(mis. `GET /me` dibungkus `data.user`, id career/skill berupa angka, bukan
+slug/kode). Semua penyesuaian itu dikumpulkan di satu file supaya
+halaman-halaman lain tidak perlu tahu detail BE.
 
-### Endpoint usulan — belum ada di dokumen kontrak
+---
 
-Selama proses konversi, ditemukan beberapa kebutuhan FE yang belum
-punya endpoint di dokumen PDF. Tolong didiskusikan dengan tim BE:
+## Technical Documentation
 
-| Endpoint usulan | Kebutuhan |
-|---|---|
-| `GET /me/skills` | Level semua skill milik user (bukan cuma yang match target career, dipakai Career Detail & Onboarding step 3) |
-| `GET /assessment/history` | Riwayat skor assessment dari waktu ke waktu (halaman My Growth) |
-| `GET /skills` (public) | Onboarding step 3 & Skill Assessment butuh daftar semua skill, bukan cuma yang terkait satu career — saat ini masih baca `getAllSkills()` lokal |
+Dokumentasi teknis (arsitektur detail, skema database/ERD, kontrak API
+BE↔ML, dan penjelasan pipeline scraping) ada di file terpisah:
 
-Beberapa catatan tambahan (bukan endpoint baru, cuma penyesuaian kecil):
-- `GET /careers` di dokumen tidak punya parameter pencarian nama —
-  pencarian di Career Explorer masih difilter di FE.
-- `GET /admin/careers` (list) cuma balas `required_skills_count`, jadi
-  form edit career di admin memanggil `GET /careers/:slug` (endpoint
-  publik) untuk ambil `required_skills` lengkap.
-- `DELETE /admin/industry-insights/:skill_id` dan beberapa `PATCH` di
-  Learning Resources dipakai FE untuk kelengkapan CRUD walau tidak
-  ada di contoh dokumen — tolong dikonfirmasi apakah backend akan
-  menyediakannya.
-- `GET /admin/users` diperlakukan **read-only** di FE, sesuai fitur
-  yang tertulis di dokumen ("List user (read-only)").
+📄 **[`TECHNICAL_DOCUMENTATION.md`](./Technical_Documentation.md)**
 
-### Catatan lain
-- Token dari login/register disimpan di `localStorage` key
+---
+
+## Catatan Penting — Batasan Prototype
+
+- **Mode mock** (localStorage) hanya untuk demo cepat tanpa backend —
+  password tidak diverifikasi sungguhan, data hilang kalau localStorage
+  dibersihkan, dan tidak multi-perangkat.
+- **Mode live** (default) sepenuhnya terhubung ke Backend Laravel asli;
+  token dari login/register disimpan di `localStorage` key
   `skillbridge_auth_token_v1`, dikirim sebagai header
-  `Authorization: Bearer <token>` saat `API_MODE = 'live'`.
-- Analisis GitHub (`Api.portfolio.analyzeGithub`) saat ini masih
-  memanggil GitHub API langsung dari browser (lihat komentar di
-  `mockAnalyzeGithub`, `js/api-mock.js`) karena belum ada backend.
-  Begitu `POST /portfolio/github-analyze` di BE sudah jalan, cukup
-  ganti `API_MODE` — tidak ada perubahan di `portfolio.js`.
-- Struktur data di `js/data.js` (skills, careers, requiredSkills,
-  SKILL_CONTENT, industry insights) sudah dirancang selaras dengan
-  skema database di `SkillBridge_Perencanaan.md` dan `SkillBridge.pdf`.
+  `Authorization: Bearer <token>`.
+- **Analisis GitHub** (`Api.portfolio.analyzeGithub`) memanggil GitHub API
+  publik langsung dari browser (`api.github.com/users/{username}/repos`,
+  mendukung CORS tanpa API key) — bukan simulasi, sungguhan menghitung
+  bahasa pemrograman dari repository publik user.
+- Data Industry Insights & Role Insights yang tampil di FE berasal dari
+  hasil scraping + ekstraksi ML sungguhan (lihat Backend & ML Service di
+  atas), bukan data statis.
+

@@ -296,6 +296,12 @@ const Api = {
     list: (region) => request('GET', '/industry-insights', { query: { region } }),
     trend: (skillId) => request('GET', '/industry-insights/:skill_id/trend', { params: { skill_id: skillId } }),
   },
+
+  roleInsights: {
+  list: (region) => request('GET', '/role-insights', { query: { region } }),
+  trend: (role, region) => request('GET', '/role-insights/:role/trend', { params: { role }, query: { region } }),
+},
+
   progress: {
     history: () => request('GET', '/progress-history'),
   },

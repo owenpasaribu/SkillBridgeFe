@@ -431,10 +431,10 @@ const SKILL_CONTENT = {
  * REGION_MULTIPLIER dipakai untuk menyimulasikan variasi demand per
  * wilayah dari angka demand nasional — bukan data regional riil.
  */
-const REGIONS = ['National', 'Jabodetabek', 'Jawa Timur', 'Jawa Barat', 'Remote'];
+const REGIONS = ['National', 'DKI Jakarta', 'Jawa Timur', 'Jawa Barat', 'Remote'];
 const REGION_MULTIPLIER = {
   National: 1,
-  Jabodetabek: 1.08,
+  'DKI Jakarta': 1.08,
   'Jawa Timur': 0.88,
   'Jawa Barat': 0.97,
   Remote: 0.72,

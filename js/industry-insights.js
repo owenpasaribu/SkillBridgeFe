@@ -43,6 +43,7 @@ async function render() {
   const multiplier = LEVEL_MULTIPLIER[level];
 
   const insightsRes = await Api.industry.list(region);
+  const roleInsightsRes = await Api.roleInsights.list(region); // TAMBAHKAN baris ini
   let list = insightsRes.data;
 
   // GET /industry-insights cuma difilter by region di kontrak — filter by
@@ -70,6 +71,7 @@ async function render() {
   document.getElementById('toolsArea').innerHTML = tools.map(t => `<span class="badge badge-neutral">${t}</span>`).join('');
 
   document.getElementById('certList').innerHTML = GENERIC_CERTS.map(c => `<li>${c}</li>`).join('');
+  renderRoleDemand(roleInsightsRes.status === 200 ? roleInsightsRes.data : [], region);
 
   const totalSample = list.reduce((sum, i) => sum + i.job_sample_size, 0);
   document.getElementById('methodologyBadge').dataset.tooltip =
@@ -84,7 +86,7 @@ function renderNarrative(list, career, region) {
   const regionText = region === 'National' ? 'nationwide' : region === 'Remote' ? 'for remote positions' : `in ${region}`;
   const careerText = career ? career.name : 'various roles';
   document.getElementById('narrativeSummary').innerHTML =
-    `<strong>${top.skill_name}</strong> appears in about <strong>${top.demand}%</strong> of the ~${top.job_sample_size} ${careerText} job postings analyzed ${regionText}.`;
+    `<strong>${top.skill_name}</strong> appears in about <strong>${top.demand}%</strong> of the ~${top.job_sample_size} ${careerText} job postings analyzed ${regionText} since August 2026.`;
 }
 
 async function renderDemandList(containerId, items, career) {
@@ -108,6 +110,33 @@ async function renderDemandList(containerId, items, career) {
         <div class="progress-track"><div class="progress-fill" style="width:${i.demand}%"></div></div>
         <span class="value">${i.demand}% <span class="trend-${i.trend}">${TREND_ICON[i.trend]}</span></span>
         ${sparkline}
+      </div>`;
+  }).join('');
+}
+
+function renderRoleDemand(roles, region) {
+  const container = document.getElementById('roleDemandChart');
+  const summary = document.getElementById('roleInsightsSummary');
+
+  if (!roles.length) {
+    container.innerHTML = '<p class="empty-state">No role demand data for this region yet.</p>';
+    summary.textContent = '';
+    return;
+  }
+
+  const regionText = region === 'National' ? 'nationwide' : `in ${region}`;
+  const totalJobs = roles[0].total_jobs;
+  summary.textContent = `Based on ${totalJobs} job postings analyzed ${regionText} this month.`;
+
+  const sorted = [...roles].sort((a, b) => b.job_count - a.job_count);
+
+  container.innerHTML = sorted.map(r => {
+    const tooltip = `${r.role}: ${r.job_count} of ${r.total_jobs} job postings (${r.percentage}%) ${regionText}.`;
+    return `
+      <div class="demand-row info-badge" tabindex="0" data-tooltip="${tooltip}">
+        <span class="name">${r.role}</span>
+        <div class="progress-track"><div class="progress-fill" style="width:${r.percentage}%"></div></div>
+        <span class="value">${r.percentage}% <span class="trend-${r.trend}">${TREND_ICON[r.trend]}</span></span>
       </div>`;
   }).join('');
 }

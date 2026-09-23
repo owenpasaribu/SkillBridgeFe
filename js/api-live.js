@@ -467,7 +467,7 @@ H['PATCH /me'] = async ({ body }) => {
 H['GET /me/skills'] = async () => {
   const res = await beCall('GET', '/me/skills');
   if (res.status !== 200) return res;
-  const list = asArray(res.data && res.data.skills);
+  const list = asArray((res.data && res.data.skills) || res.data);
   list.forEach(us => registerSkill(us.skill));
   return {
     ...res,
@@ -829,6 +829,22 @@ H['GET /industry-insights'] = async ({ query }) => {
       };
     }),
   };
+};
+
+/* ---------- Role Insights ---------- */
+
+H['GET /role-insights'] = async ({ query }) => {
+  const region = query && query.region && query.region !== 'National' ? query.region : undefined;
+  const res = await beCall('GET', '/role-insights', { query: { region } });
+  if (res.status !== 200) return res;
+  return { ...res, data: asArray(res.data) };
+};
+
+H['GET /role-insights/:role/trend'] = async ({ params, query }) => {
+  const region = query && query.region && query.region !== 'National' ? query.region : undefined;
+  const res = await beCall('GET', `/role-insights/${encodeURIComponent(params.role)}/trend`, { query: { region } });
+  if (res.status !== 200) return res;
+  return { ...res, data: res.data.history || [] }; // sesuaikan: BE sekarang balas {role, slug, history}, bukan array langsung
 };
 
 // Riwayat demand suatu skill. Bentuk item `history` belum ada contohnya di dokumentasi BE
