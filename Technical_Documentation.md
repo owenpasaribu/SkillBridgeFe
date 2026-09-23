@@ -182,7 +182,7 @@ Data yang tidak berhasil diklasifikasi otomatis (region/role bernilai
 
 | Komponen | Platform | URL |
 |---|---|---|
-| Frontend | `[ISI]` | `[ISI]` |
+| Frontend | Vercel | https://skill-bridge-xi-two.vercel.app/ |
 | Backend | Railway | https://skillbridge-production-f8ed.up.railway.app |
 | ML Service | Vercel | https://skill-bridge-ml-asaj.vercel.app/ |
 | Database | MySQL di Railway | — |
