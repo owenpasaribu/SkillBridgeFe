@@ -62,8 +62,8 @@ async function render() {
 
   const technical = list.filter(i => getSkillCategory(i.skill_id) === 'technical').slice(0, 8);
   const soft = list.filter(i => getSkillCategory(i.skill_id) === 'soft').slice(0, 8);
-  const fallbackSoft = [{ skill_id: 'communication', skill_name: skillName('communication'), demand: Math.round(71 * multiplier), trend: 'stable', job_sample_size: 300 }];
-
+  const fallbackSoft = [{ skill_id: 'communication', skill_name: skillName('communication'), demand: Math.round(71 * multiplier), trend: 'stable', job_sample_size: 300, isMock: true }];
+  
   await renderDemandList('technicalDemand', technical, career);
   await renderDemandList('softDemand', soft.length ? soft : fallbackSoft, career);
 
@@ -96,7 +96,20 @@ async function renderDemandList(containerId, items, career) {
     return;
   }
 
-  const trends = await Promise.all(items.map(i => Api.industry.trend(i.skill_id)));
+  const trends = await Promise.all(items.map(i => {
+    if (i.isMock) {
+      return Promise.resolve({ 
+        status: 200, 
+        data: [
+          { month: 'Jun', value: 68 },
+          { month: 'Jul', value: 70 },
+          { month: 'Aug', value: 71 },
+          { month: 'Sep', value: 71 }
+        ] 
+      });
+    }
+    return Api.industry.trend(i.skill_id);
+  }));
 
   container.innerHTML = items.map((i, idx) => {
     const history = trends[idx].status === 200 ? trends[idx].data : [];
