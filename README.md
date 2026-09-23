@@ -9,7 +9,7 @@ lengkap, karena FE tidak bisa berfungsi penuh tanpa keduanya.
 
 | Komponen | Link |
 |---|---|
-| Frontend | https://skill-bridge-blond-phi.vercel.app |
+| Frontend | https://skill-bridge-xi-two.vercel.app/ |
 | Backend API | https://skillbridge-production-f8ed.up.railway.app |
 | Backend API Docs (Scribe) | https://skillbridge-production-f8ed.up.railway.app/docs |
 | ML Service | https://skill-bridge-ml-asaj.vercel.app |
