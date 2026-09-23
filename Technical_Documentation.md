@@ -1,8 +1,7 @@
 # SkillBridge — Technical Documentation
 
 Dokumen ini menjelaskan arsitektur teknis SkillBridge secara lebih rinci
-dibanding README (yang berfokus pada cara instalasi & menjalankan). Ditujukan
-untuk juri/reviewer yang ingin memahami desain sistem secara mendalam.
+dibanding README (yang berfokus pada cara instalasi & menjalankan).
 
 ## Daftar Isi
 

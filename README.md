@@ -42,15 +42,15 @@ lengkap, karena FE tidak bisa berfungsi penuh tanpa keduanya.
 ## Arsitektur Sistem
 
 ```
-┌─────────────┐        ┌──────────────────────┐        ┌─────────────────┐
-│  Frontend   │──HTTP─►│   Backend (Laravel)   │◄─HTTP─►│   ML Service     │
-│ (HTML/JS)   │  /api  │   - Auth, Career,     │ /extract-skills │ (Python/Flask) │
-│             │        │     Skill Gap, dst.   │ /internal/skills│ - Skill matching│
-│             │        │   - Scraper (Karirhub)│        │   dari taxonomy  │
-│             │        │   - Admin & Insights   │        │                  │
-└─────────────┘        └──────────┬────────────┘        └─────────────────┘
-                                    │
-                                    ▼
+┌─────────────┐        ┌───────────────────────┐                  ┌──────────────────┐
+│  Frontend   │──HTTP─►│   Backend (Laravel)   │◄───────HTTP─────►│   ML Service     │
+│ (HTML/JS)   │  /api  │   - Auth, Career,     │ /extract-skills  │ (Python/Flask)   │
+│             │        │     Skill Gap, dst.   │ /internal/skills │ - Skill matching │
+│             │        │   - Scraper (Karirhub)│                  │   dari taxonomy  │
+│             │        │   - Admin & Insights  │                 │                  │
+└─────────────┘        └──────────┬────────────┘                  └──────────────────┘
+                                  │
+                                  ▼
                               ┌───────────┐
                               │   MySQL   │
                               └───────────┘
@@ -74,7 +74,7 @@ sudah hidup sebelum FE mulai dipakai, supaya semua fitur berfungsi).
 **Prasyarat:** PHP 8.2, Composer, MySQL.
 
 ```bash
-git clone [ISI: link repo BE]
+git clone https://github.com/DwiAmandaAP/SkillBridge.git
 cd skillbridge-backend
 
 composer install
@@ -124,7 +124,7 @@ dengan mengubah kolom `role` user menjadi `admin` di database.
 **Prasyarat:** Python 3.10.
 
 ```bash
-git clone [ISI: link repo ML]
+git clone https://skill-bridge-ml-asaj.vercel.app
 cd skillbridge-ml
 
 python -m venv venv
@@ -162,7 +162,7 @@ Backend saat start (`GET /internal/skills`).
 Tidak butuh instalasi dependency apapun (tanpa `npm install`).
 
 ```bash
-git clone [ISI: link repo FE, atau langsung repo ini]
+git clone https://github.com/owenpasaribu/SkillBridgeFe.git
 cd skillbridge-frontend
 ```
 
@@ -201,8 +201,7 @@ dipakai lalu mengarahkan ke dashboard yang sesuai:
   tidak ada akun demo bawaan di mode `live`.
 - Akun **student**: hasil register lewat halaman Register.
 
-> Tombol "Coba sebagai akun demo" hanya berfungsi saat `API_MODE = 'mock'`
-> (localStorage, tanpa backend) — lihat bagian [Mode Mock](#arsitektur-api-client---terhubung-ke-laravel-be) di bawah.
+> Tombol "Coba sebagai akun demo" hanya berfungsi saat `API_MODE = 'mock'`.
 
 ---
 
