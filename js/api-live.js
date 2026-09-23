@@ -240,7 +240,7 @@ function careerToFeDto(be) {
     short_description: be.short_description ?? seed.shortDescription ?? '',
     description: be.description ?? seed.description ?? '',
     responsibilities: be.responsibilities ?? seed.responsibilities ?? [],
-    tools: be.tools ?? seed.tools ?? [],
+     be.tools ?? seed.tools ?? (be.required_skills ? be.required_skills.map(s => s.skill_name).slice(0, 5) : []),
   };
 }
 
